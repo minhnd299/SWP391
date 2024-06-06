@@ -17,5 +17,6 @@ public class Objective {
     private String description;
     private String status;
     private Date createAt;
-    private Student student;
+    private Class classes;
+    private Lecturer lecturer;
 }

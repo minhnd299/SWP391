@@ -3,8 +3,22 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/PC/Documents/GitHub/SWP391/src/java/model/UserClass.java</file>
-            <file>file:/C:/Users/PC/Documents/GitHub/SWP391/src/java/model/Task.java</file>
+            <file>file:/E:/CODE/SWP_2024_main1/src/java/controller/login/LoginGoogleHandler.java</file>
+            <file>file:/E:/CODE/SWP_2024_main1/src/java/dal/DBContext.java</file>
+            <file>file:/E:/CODE/SWP_2024_main1/src/java/dal/UserClassDAO.java</file>
+            <file>file:/E:/CODE/SWP_2024_main1/src/java/controller/lecturer/ClassStudentController.java</file>
+            <file>file:/E:/CODE/SWP_2024_main1/src/java/controller/lecturer/TaskManagement.java</file>
+            <file>file:/E:/CODE/SWP_2024_main1/src/java/controller/lecturer/ClassListController.java</file>
+            <file>file:/E:/CODE/SWP_2024_main1/src/java/model/Admin.java</file>
+            <file>file:/E:/CODE/SWP_2024_main1/src/java/filter/LoginFilter.java</file>
+            <file>file:/E:/CODE/SWP_2024_main1/src/java/dal/ClasssDAO.java</file>
+            <file>file:/E:/CODE/SWP_2024_main1/src/java/dal/LecturerDAO.java</file>
+            <file>file:/E:/CODE/SWP_2024_main1/src/java/controller/admin/ClassStudentManagement.java</file>
+            <file>file:/E:/CODE/SWP_2024_main1/src/java/controller/login/Logout.java</file>
+            <file>file:/E:/CODE/SWP_2024_main1/src/java/controller/login/Login.java</file>
+            <file>file:/E:/CODE/SWP_2024_main1/src/java/controller/admin/UserManagement.java</file>
+            <file>file:/E:/CODE/SWP_2024_main1/src/java/model/Account.java</file>
+            <file>file:/E:/CODE/SWP_2024_main1/src/java/init/InitAndCheck.java</file>
         </group>
     </open-files>
 </project-private>
