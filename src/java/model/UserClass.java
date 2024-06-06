@@ -11,7 +11,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserClass {
-    private int id;
+    private int userClass_id;
+    private int student_id;
+    private int class_id;
     private Class classes;
     private Student student;
 }
