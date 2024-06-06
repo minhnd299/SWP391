@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.sql.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,8 @@ public class Task {
     private String description;
     private String status;
     private Objective objecttive;
+    private Date start_date;
+    private Date end_date;
 
     public Task(String title, String description, String status, Objective objecttive) {
         this.title = title;
