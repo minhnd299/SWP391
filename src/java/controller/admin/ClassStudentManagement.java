@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.*;
 
-@WebServlet(name = "ClassStudentController", urlPatterns = {"/lecturer/class-student"})
+@WebServlet(name = "ClassStudentController", urlPatterns = {"/admin/class-student"})
 public class ClassStudentManagement extends HttpServlet {
     
     @Override

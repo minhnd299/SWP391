@@ -17,10 +17,16 @@ import model.Task;
 
 /**
  *
- * @author ADMIN
+ * @author duypr
  */
 public class TaskDAO extends DBContext {
 
+    /**
+     * 
+     * @param objective_id
+     * @param status
+     * @return 
+     */
     public List<Task> getAllTaskyObject(Integer objective_id, String status) {
         List<Task> tasks = new ArrayList<>();
         List<Object> list = new ArrayList<>();
@@ -53,32 +59,48 @@ public class TaskDAO extends DBContext {
                     tasks.add(t);
                 }
             }
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             e.printStackTrace();
         }
         return tasks;
     }
 
+    /**
+     * Map các tham số vào PreparedStatement
+     * @param ps
+     * @param args
+     * @throws SQLException 
+     */
     public void mapParams(PreparedStatement ps, List<Object> args) throws SQLException {
         int i = 1;
         for (Object arg : args) {
             if (arg instanceof Date) {
                 ps.setTimestamp(i++, new Timestamp(((Date) arg).getTime()));
-            } else if (arg instanceof Integer) {
+            } 
+            else if (arg instanceof Integer) {
                 ps.setInt(i++, (Integer) arg);
-            } else if (arg instanceof Long) {
+            } 
+            else if (arg instanceof Long) {
                 ps.setLong(i++, (Long) arg);
-            } else if (arg instanceof Double) {
+            } 
+            else if (arg instanceof Double) {
                 ps.setDouble(i++, (Double) arg);
-            } else if (arg instanceof Float) {
+            } 
+            else if (arg instanceof Float) {
                 ps.setFloat(i++, (Float) arg);
-            } else {
+            } 
+            else {
                 ps.setString(i++, (String) arg);
             }
-
         }
     }
 
+    /**
+     * Thay đổi trạng thái của nhiệm vụ
+     * @param task_id
+     * @param newStatus 
+     */
     public void changeTaskStatus(int task_id, String newStatus) {
         try {
             String query = "UPDATE Task SET status = ? WHERE task_id = ?";
@@ -86,16 +108,25 @@ public class TaskDAO extends DBContext {
             preparedStatement.setString(1, newStatus);
             preparedStatement.setInt(2, task_id);
             int rowsAffected = preparedStatement.executeUpdate();
+            
+            // Kiểm tra nếu có dòng nào được cập nhật
             if (rowsAffected > 0) {
                 System.out.println("Task status updated successfully.");
-            } else {
+            } 
+            else {
                 System.out.println("Failed to update task status.");
             }
-        } catch (SQLException e) {
+        } 
+        catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Lấy nhiệm vụ theo id
+     * @param taskId
+     * @return 
+     */
     public Task getById(int taskId) {
         Task t = null;
         ObjectiveDAO objectiveDAO = new ObjectiveDAO();
@@ -104,6 +135,8 @@ public class TaskDAO extends DBContext {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, taskId);
             try (ResultSet rs = preparedStatement.executeQuery()) {
+                
+                // Kiểm tra nếu có kết quả trả về
                 if (rs.next()) {
                     t = new Task();
                     t.setTask_id(rs.getInt("task_id"));
@@ -114,12 +147,22 @@ public class TaskDAO extends DBContext {
                     t.setObjecttive(o);
                 }
             }
-        } catch (SQLException e) {
+        } 
+        catch (SQLException e) {
             e.printStackTrace();
         }
         return t;
     }
 
+    /**
+     * Thêm nhiệm vụ mới
+     * @param title
+     * @param description
+     * @param status
+     * @param start_date
+     * @param end_date
+     * @param objectiveId 
+     */
     public void addTask(String title, String description, String status, String start_date, String end_date, int objectiveId) {
         String query = "INSERT INTO Task (title, description, status,start_date, end_date ,objective_id) VALUES (?, ?,?,?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -130,16 +173,28 @@ public class TaskDAO extends DBContext {
             preparedStatement.setString(5, end_date);
             preparedStatement.setInt(6, objectiveId);
             int rowsAffected = preparedStatement.executeUpdate();
+            
+            // Kiểm tra nếu có dòng nào được thêm vào
             if (rowsAffected > 0) {
                 System.out.println("Task added successfully.");
-            } else {
+            } 
+            else {
                 System.out.println("Failed to add task.");
             }
-        } catch (SQLException e) {
+        } 
+        catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Cập nhật nhiệm vụ
+     * @param title
+     * @param description
+     * @param start_date
+     * @param end_date
+     * @param task_id 
+     */
     public void updateTask(String title, String description,  String start_date, String end_date, int task_id) {
         try {
             String query = "UPDATE Task SET title = ?, description = ?,  start_date =? , end_date =? where task_id = ?";
@@ -151,16 +206,24 @@ public class TaskDAO extends DBContext {
             preparedStatement.setString(4, end_date);
             preparedStatement.setInt(5, task_id);
             int rowsAffected = preparedStatement.executeUpdate();
+            
+            // Kiểm tra nếu có dòng nào được cập nhật
             if (rowsAffected > 0) {
                 System.out.println("Task updated successfully.");
-            } else {
+            } 
+            else {
                 System.out.println("Failed to update task.");
             }
-        } catch (SQLException e) {
+        } 
+        catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Xóa nhiệm vụ
+     * @param taskId 
+     */
     public void deleteTask(int taskId) {
         try {
             String query = "DELETE FROM Task WHERE task_id = ?";
@@ -169,14 +232,21 @@ public class TaskDAO extends DBContext {
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Task deleted successfully.");
-            } else {
+            } 
+            else {
                 System.out.println("Failed to delete task.");
             }
-        } catch (SQLException e) {
+        } 
+        catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Kiểm tra nếu nhiệm vụ đang được sử dụng
+     * @param taskId
+     * @return 
+     */
     public boolean isTaskInUse(int taskId) {
         try {
             // Check if the task is referenced in the Comment table
@@ -214,12 +284,16 @@ public class TaskDAO extends DBContext {
 
             // If the task is not referenced in any of the tables, return false
             return false;
-        } catch (SQLException e) {
+        } 
+        catch (SQLException e) {
             e.printStackTrace();
             return true; // Consider task as in use if there's an error
         }
     }
 
+    /**
+     * Cập nhật trạng thái của các nhiệm vụ
+     */
     public void updateTaskStatuses() {
         try {
             LocalDate currentDate = LocalDate.now();
@@ -243,8 +317,8 @@ public class TaskDAO extends DBContext {
                 doneStatement.setDate(1, Date.valueOf(currentDate));
                 doneStatement.executeUpdate();
             }
-
-        } catch (SQLException e) {
+        } 
+        catch (SQLException e) {
             e.printStackTrace();
         }
     }

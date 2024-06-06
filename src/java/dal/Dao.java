@@ -18,17 +18,20 @@ public class Dao extends DBContext {
 
     public Account getAccountByEmail(String email) {
         String sql = """
-                     select [username], [Password]
-                     from Account a, Student s 
-                     where Email = ? and [Name] = [User_name]""";
+                     select id,username,password,roleId from Account where email = ?
+                     """;
         try {
             PreparedStatement st = connection.prepareStatement(sql);
+            RoleDAO r = new RoleDAO();
             st.setString(1, email);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Account a = new Account();
-                a.setUsername(rs.getString("User_name"));
-                a.setPassword(rs.getString("Password"));
+                a.setId(rs.getInt("id"));
+                a.setUsername(rs.getString("username"));
+                a.setPassword(rs.getString("password"));
+                Role role = r.getById(rs.getInt("roleId"));
+                a.setRoleAccount(role);
                 return a;
             }
         } catch (SQLException e) {

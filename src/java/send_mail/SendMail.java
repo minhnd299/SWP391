@@ -23,8 +23,8 @@ public class SendMail {
 
     public boolean sendMailErrol(String email,String username, String content) {
         boolean test = false;
-        final String from = "doantrongthaik47a2@gmail.com";
-        final String password = "dykeshnjtvluelxh";
+        final String from = "minhndhe172328@fpt.edu.vn";
+        final String password = ""; 
 
         // Properties : Declare all Attribute:
         Properties props = new Properties();

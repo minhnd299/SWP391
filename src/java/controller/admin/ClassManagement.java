@@ -152,7 +152,6 @@ public class ClassManagement extends HttpServlet {
                 response.sendRedirect("class-list");
             }
             if (action.equals("add")) {
-
                 String name = request.getParameter("name");
                 int lid = Integer.parseInt(request.getParameter("lid"));
                 Lecturer l = lecturerDAO.getById(lid);

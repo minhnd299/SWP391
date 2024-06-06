@@ -78,7 +78,7 @@
                                     <tr>
                                         <th>STT</th>
                                         <th>Student</th>
-                                        <!--<th>Action</th>-->
+                                        <th>RollNumber</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -86,7 +86,7 @@
                                     <tr>
                                         <td>${status.index + 1}</td>
                                         <td>${c.student.fullName}</td>
-                                      
+                                        <td>${c.student.rollNumber}</td>
                                     </tr>
                                 </c:forEach>
                             </tbody>

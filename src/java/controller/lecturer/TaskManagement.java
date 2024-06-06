@@ -43,7 +43,7 @@ public class TaskManagement extends HttpServlet {
 
     }
 
-    @Override
+   @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -51,9 +51,10 @@ public class TaskManagement extends HttpServlet {
         TaskDAO taskDAO = new TaskDAO();
 
         String action = request.getParameter("action");
+        // Kiểm tra xem người dùng đã đăng nhập và có quyền là giảng viên hay không
         if (a != null && a.getRoleAccount().getRole_id() == 3) {
+            // Nếu hành động là ADD
             if (action.equals("add")) {
-
                 int oId = Integer.parseInt(request.getParameter("oid"));
                 String title = request.getParameter("title");
                 String description = request.getParameter("description");
@@ -64,11 +65,14 @@ public class TaskManagement extends HttpServlet {
                     taskDAO.addTask(title, description, status, start_date, end_date, oId);
                     session.setAttribute("notification", "Task add successfully!");
                     response.sendRedirect("task?oid=" + oId);
-                } catch (Exception e) {
+                } 
+                catch (Exception e) {
                     session.setAttribute("notificationErr", e.getMessage());
                     response.sendRedirect("task?oid=" + oId);
                 }
             }
+            
+            //Nếu hành động là DELETE
             if (action.equals("delete")) {
                 int id = Integer.parseInt(request.getParameter("id"));
                 int oId = Integer.parseInt(request.getParameter("oid"));
@@ -79,19 +83,20 @@ public class TaskManagement extends HttpServlet {
                         taskDAO.deleteTask(id);
                         session.setAttribute("notification", "Task delete successfully!");
                         response.sendRedirect("task?oid=" + oId);
-                    } catch (Exception e) {
+                    } 
+                    catch (Exception e) {
                         session.setAttribute("notificationErr", e.getMessage());
                         response.sendRedirect("task?oid=" + oId);
                     }
-
-                } else {
+                } 
+                else {
                     session.setAttribute("notificationErr", "Delete failed: This task started!");
                     response.sendRedirect("task?oid=" + oId);
                 }
-
             }
+            
+            //Nếu hành động là UPDATE
             if (action.equals("update")) {
-
                 int oId = Integer.parseInt(request.getParameter("oid"));
                 int id = Integer.parseInt(request.getParameter("id"));
                 String title = request.getParameter("title");
@@ -102,12 +107,14 @@ public class TaskManagement extends HttpServlet {
                     taskDAO.updateTask(title, description, start_date, end_date, id);
                     session.setAttribute("notification", "Task update successfully!");
                     response.sendRedirect("task?oid=" + oId);
-                } catch (Exception e) {
+                } 
+                catch (Exception e) {
                     session.setAttribute("notificationErr", e.getMessage());
                     response.sendRedirect("task?oid=" + oId);
                 }
             }
-        } else {
+        } 
+        else {
             response.sendRedirect("../login");
         }
     }

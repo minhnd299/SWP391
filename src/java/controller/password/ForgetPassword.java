@@ -31,32 +31,33 @@ public class ForgetPassword extends HttpServlet {
 
    
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         String email = request.getParameter("email");
-        String a[] = email.split("@");
+        String[] a = email.split("@");
         String err = null;
         String suc = null;
+        String domain = null;
         int l = a.length;
-        if(l<2) {
+        if (l < 2) {
             err = "Enter email, plz !!!";
-        }else if(!a[1].equalsIgnoreCase("fpt.edu.vn")){
-            err = "Enter email of FBT, plz!!!";
-        }else {
-            Dao d = new Dao();
-            Account acc = d.getAccountByEmail(email);
-            if(acc == null) {
-                err = "You are not in the lab this semester!!!";
-            }else {
-                Mailer m = new Mailer();
-                String newPassword = m.forgetPassword(email);
-                d.setNewPassword(acc.getUsername(), newPassword);
-                suc = "We send new password to email!!!";
-            } 
+        } else {
+           Dao d = new Dao();
+                Account acc = d.getAccountByEmail(email);
+                if (acc == null) {
+                    err = "You are not in the lab this semester!!!";
+                } else {
+                    Mailer m = new Mailer();
+                    String newPassword = m.forgetPassword(email);
+                    d.setNewPassword(acc.getUsername(), newPassword);
+                    suc = "We send new password to email!!!";
+                }
         }
         request.setAttribute("err", err);
         request.setAttribute("suc", suc);
+        request.setAttribute("domain", domain);
         request.getRequestDispatcher("forgot-password.jsp").forward(request, response);
+        
     }
 
     /** 

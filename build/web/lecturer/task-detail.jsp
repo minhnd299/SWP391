@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <style>
+    <!-- CSS Styles -->
 
     .status {
         font-weight: bold;
@@ -13,16 +14,23 @@
         color: green;
     }
 </style>
+
+<!-- Include header -->
 <jsp:include page="header.jsp"></jsp:include>
+
+    <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
-                     <jsp:include page="header-content.jsp"></jsp:include>
+            <!-- Include header content -->
+        <jsp:include page="header-content.jsp"></jsp:include>
 
+            <!-- Task Detail -->
             <div class="container-fluid">
                 <h1 class="h3 mb-2 text-gray-800">Task Detail</h1>
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
 
+                        <!-- Success Notification -->
                     <c:if test="${not empty sessionScope.notification}">
                         <div class="alert alert-success alert-dismissible fade show" role="alert" style="text-align: center">
                             ${sessionScope.notification}
@@ -33,6 +41,8 @@
                             session.removeAttribute("notification");
                         %>
                     </c:if>
+
+                    <!-- Error Notification -->
                     <c:if test="${not empty sessionScope.notificationErr}">
                         <div class="alert alert-danger alert-dismissible fade show" role="alert"  style="text-align: center">
                             ${sessionScope.notificationErr}
@@ -46,6 +56,7 @@
 
                 </div>
                 <div class="card-body">
+                    <!-- Task Details -->
                     Title : <span>${task.title}</span> 
                     <br>
                     <br>
@@ -57,6 +68,8 @@
                     <br>
                     Comment
                     <br>
+
+                    <!-- Add Comment Form -->
                     <form action="task-detail" method="POST">
                         <textarea name="comment" class="form-control"></textarea>
                         <input type="hidden" name="action" value="add-comment">
@@ -66,8 +79,9 @@
                     </form>
                     <hr>
                     <br>
-                    <c:forEach var="c" items="${comments}">
 
+                    <!-- Comments -->
+                    <c:forEach var="c" items="${comments}">
                         <c:choose>
                             <c:when test="${c.lecturer != null}">
                                 <span style="color: orange; font-weight: bold">
@@ -81,8 +95,13 @@
                             </c:otherwise>
                         </c:choose>
                         </span>
-                        : ${c.comment}  <c:if test="${account.getId() == c.lecturer.accountLecturer.id}">
+                        : ${c.comment}  
+
+                        <!-- Edit Comment Modal -->
+                        <c:if test="${account.getId() == c.lecturer.accountLecturer.id}">
                             <i class="fas fa-pen" style="margin-left: 10px; cursor: pointer;" data-toggle="modal" data-target="#editCommentModal${c.comment_id}"></i>
+
+                            <!-- Modal -->
                             <div class="modal fade" id="editCommentModal${c.comment_id}" tabindex="-1" role="dialog" aria-labelledby="editCommentModalLabel${c.comment_id}" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -92,8 +111,9 @@
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <form action="task-detail" method="POSt">
 
+                                        <!-- Edit Comment Form -->
+                                        <form action="task-detail" method="POSt">
                                             <div class="modal-body">
                                                 <!-- Text area for editing comment -->
                                                 <input type="hidden" name="action" value="edit-comment">
@@ -119,6 +139,11 @@
     </div>
 
 </div>
+
+<!-- Include Footer -->
+<jsp:include page="footer.jsp"></jsp:include>
+
+<!-- JavaScript for updating status -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         var statusElement = document.querySelector(".status");
@@ -132,4 +157,4 @@
         }
     });
 </script>
-<jsp:include page="footer.jsp"></jsp:include>
+
