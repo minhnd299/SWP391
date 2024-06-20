@@ -184,7 +184,27 @@ public class ObjecctiveDAO extends DBContext {
 //        }
 //    }
 
-    
+    public void delObjective(int objectiveId) throws Exception {
+        try {
+            // Check if there are any tasks associated with this objective
+            String checkQuery = "SELECT COUNT(*) AS task_count FROM Task WHERE objective_id = ?";
+            PreparedStatement checkStatement = connection.prepareStatement(checkQuery);
+            checkStatement.setInt(1, objectiveId);
+            ResultSet checkResultSet = checkStatement.executeQuery();
+
+            if (checkResultSet.next() && checkResultSet.getInt("task_count") > 0) {
+                throw new Exception("Cannot delete objective. There are tasks associated with this objective.");
+            } else {
+                // Proceed with the deletion if no tasks are found
+                String deleteQuery = "DELETE FROM Objective WHERE objective_id = ?";
+                PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
+                deleteStatement.setInt(1, objectiveId);
+                deleteStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new Exception("Error occurred while deleting objective: " + e.getMessage(), e);
+        }
+    }
     public Objective getByIdd(int objectiveId) {
 
         LecturerDAO ldao = new LecturerDAO();
@@ -210,25 +230,37 @@ public class ObjecctiveDAO extends DBContext {
         return objective;
     }
     
-//    public void deleteObjective(int objectiveId) throws Exception {
-//        try {
-//            // Check if there are any tasks associated with this objective
-//            String checkQuery = "SELECT COUNT(*) AS task_count FROM Task WHERE objective_id = ?";
-//            PreparedStatement checkStatement = connection.prepareStatement(checkQuery);
-//            checkStatement.setInt(1, objectiveId);
-//            ResultSet checkResultSet = checkStatement.executeQuery();
-//
-//            if (checkResultSet.next() && checkResultSet.getInt("task_count") > 0) {
-//                throw new Exception("Cannot delete objective. There are tasks associated with this objective.");
-//            } else {
-//                // Proceed with the deletion if no tasks are found
-//                String deleteQuery = "DELETE FROM Objective WHERE objective_id = ?";
-//                PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
-//                deleteStatement.setInt(1, objectiveId);
-//                deleteStatement.executeUpdate();
-//            }
-//        } catch (SQLException e) {
-//            throw new Exception("Error occurred while deleting objective: " + e.getMessage(), e);
-//        }
-//    }
+    public List<Objective> getAllObjective(Integer class_id) {
+        ClasssDAO dAO = new ClasssDAO();
+        LecturerDAO lecturerDAO = new LecturerDAO();
+        List<Objective> objectives = new ArrayList<>();
+        try {
+            String query = """
+                         select o.* from Objective o JOIN Class c On c.class_id = o.class_id
+                         WHERE c.class_id = ?
+                         ORDER BY o.Objective_id DESC
+                         """;
+            PreparedStatement preparedStatement;
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, class_id);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                while (rs.next()) {
+                    Objective o = new Objective();
+                    o.setObjective_id(rs.getInt("objective_id"));
+                    o.setDescription(rs.getString("description"));
+                    o.setStatus(rs.getString("status"));
+                    o.setCreateAt(rs.getDate("create_at"));
+                    model.Class c = dAO.getById(rs.getInt("class_id"));
+                    Lecturer l = lecturerDAO.getById(rs.getInt("createBy"));
+                    o.setClasses(c);
+                    o.setLecturer(l);
+                    objectives.add(o);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return objectives;
+    }
+
 }
