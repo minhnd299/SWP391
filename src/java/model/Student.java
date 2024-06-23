@@ -19,5 +19,6 @@ public class Student {
     private Date birthDate;
     private int schoolYear;
     private Account account;
-
+    private String status;
+    private Attendance attendance;
 }

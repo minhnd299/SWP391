@@ -19,4 +19,5 @@ public class Class {
     private Lecturer lecturer;
     private String status;
     private int studentNumber;
+    private String checkDate;
 }
