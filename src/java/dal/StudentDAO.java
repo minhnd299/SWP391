@@ -108,6 +108,18 @@ public class StudentDAO extends DBContext {
         return null;
     }
 
+     public boolean updateStudent(int sId, String fullName) {
+        String query = "UPDATE Student SET fullName = ?  WHERE student_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, fullName);
+            ps.setInt(2, sId);
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     public static void main(String[] args) {
         StudentDAO l = new StudentDAO();
         System.out.println(l.getLastestStudent( ));

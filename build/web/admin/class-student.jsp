@@ -78,15 +78,15 @@
                                     <tr>
                                         <th>STT</th>
                                         <th>Student</th>
-                                        <!--<th>Action</th>-->
+                                        <th>RollNumber</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 <c:forEach var="c" items="${classList}" varStatus="status">
                                     <tr>
                                         <td>${status.index + 1}</td>
-                                        <td>${c.student.fullName}</td>
-                                      
+                                        <td><a href="${pageContext.request.contextPath}/common/profile?id=${c.student.account.id}">${c.student.fullName}</a></td>
+                                        <td>${c.student.rollNumber}</td>
                                     </tr>
                                 </c:forEach>
                             </tbody>

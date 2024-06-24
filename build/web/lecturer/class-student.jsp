@@ -71,24 +71,80 @@
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">All classes</h6>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>Student</th>
-                                        <!--<th>Action</th>-->
-                                    </tr>
-                                </thead>
-                                <tbody>
+                <c:if test="${not empty sessionScope.notification}">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" style="text-align: center">
+                        ${sessionScope.notification}
+                        <button type="button" class="btn-danger" data-dismiss="alert" aria-label="Close">x</button>
+                    </div>
+                    <%
+                        // Clear the notification after displaying it
+                        session.removeAttribute("notification");
+                    %>
+                </c:if>
+                <c:if test="${not empty sessionScope.notificationErr}">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert"  style="text-align: center">
+                        ${sessionScope.notificationErr}
+                        <button type="button" class="btn-danger" data-dismiss="alert" >x</button>
+                    </div>
+                    <%
+                        session.removeAttribute("notificationErr");
+                    %>
+                </c:if>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Student</th>
+                                    <th>RollNumber</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 <c:forEach var="c" items="${classList}" varStatus="status">
                                     <tr>
                                         <td>${status.index + 1}</td>
-                                        <td>${c.student.fullName}</td>
-                                      
+                                        <td><a href="${pageContext.request.contextPath}/common/profile?id=${c.student.account.id}">${c.student.fullName}</a></td>
+
+                                        <td>${c.student.rollNumber}</td>
+                                        <td><button  type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#add${c.student.student_id}">Add New</button></td>
                                     </tr>
-                                </c:forEach>
+                                <div class="modal fade" id="add${c.student.student_id}" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="addModalLabel">Report Student</h5>
+                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <form id="addForm" action="report" method="post">
+                                                <div class="modal-body">
+                                                    <input type="hidden" name="action" value="add"/>
+                                                    <input type="hidden" name="sid" value="${c.student.student_id}"/>
+                                                    <input type="hidden" name="cid" value="${param.cid}"/>
+                                                    <label class="form-text">Select type</label>
+                                                    <select class="form-control" name="type">
+                                                        <option class="form-control" value="Mid term">Mid Term</option>
+                                                        <option class="form-control" value="Final">Final</option>
+                                                    </select>
+                                                    <span id="titleError" style="color: red;"></span>
+                                                    <hr>
+                                                    <textarea class="form-control" name="content" placeholder="Enter content" rows="4"></textarea>
+                                                    <span id="contentError" style="color: red;"></span>
+                                                    <hr>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+                                                    <button class="btn btn-sm btn-info" type="submit" value="Ađ">Add</button>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
                             </tbody>
                         </table>
                     </div>

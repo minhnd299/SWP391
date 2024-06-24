@@ -16,7 +16,7 @@
 <jsp:include page="header.jsp"></jsp:include>
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
-               <jsp:include page="header-content.jsp"></jsp:include>
+        <jsp:include page="header-content.jsp"></jsp:include>
             <div class="container-fluid">
                 <h1 class="h3 mb-2 text-gray-800">Task Detail</h1>
                 <div class="card shadow mb-4">
@@ -44,122 +44,155 @@
                     </c:if>
 
                 </div>
-                <div class="card-body">
-                    Title : <span>${task.title}</span> 
-
-                    <c:choose>
-                        <c:when test="${task.status != 'done'}">
-                            <button class="btn btn-success btn-sm" style="float: right;"data-toggle="modal" data-target="#close">Close task</button>
-                        </c:when>
-                    </c:choose>
-
-                    <br>
-                    <br>
-                    Description: <span>${task.description}</span> 
-                    <br>
-                    <br>
-                    Status: <span class="status">${task.status}</span>
-                    <br>
-                    <br>
-                    Comment
-                    <br>
-                    <form action="task-detail" method="POST">
-                        <textarea name="comment" class="form-control"></textarea>
-                        <input type="hidden" name="action" value="add-comment">
-                        <input type="hidden" name="tid" value="${param.id}">
-                        <hr>
-                        <button class="btn btn-success btn-sm"> Add comment</button>
-                    </form>
-                    <hr>
-                    <br>
-                    <c:forEach var="c" items="${comments}">
-
-                        <c:choose>
-                            <c:when test="${c.lecturer != null}">
-                                <span style="color: orange; font-weight: bold">
-                                    ${c.lecturer.fullName} (Lecturer)
-                                </span>
-                            </c:when>
-                            <c:otherwise>
-                                <span style="font-weight: bold">
-                                    ${c.student.fullName} (Student)
-                                </span>
-                            </c:otherwise>
-                        </c:choose>
-                        </span>
-                        : ${c.comment}  <c:if test="${account.getId() == c.student.account.id}">
-                            <i class="fas fa-pen" style="margin-left: 10px; cursor: pointer;" data-toggle="modal" data-target="#editCommentModal${c.comment_id}"></i>
-                            <div class="modal fade" id="editCommentModal${c.comment_id}" tabindex="-1" role="dialog" aria-labelledby="editCommentModalLabel${c.comment_id}" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="editCommentModalLabel${c.comment_id}">Edit Comment</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card-body">
+                            <!-- Task Details -->
+                            <div class="row mb-3">
+                                <div class="col-2"><strong>Title:</strong></div>
+                                <div class="col-8"><span>${task.title}</span></div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-2"><strong>Description:</strong></div>
+                                <div class="col-10"><span>${task.description}</span></div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-2"><strong>Status:</strong></div>
+                                <div class="col-10"><span class="status">${task.status}</span></div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-2"><strong>Grade:</strong></div>
+                                <div class="col-10"><span>${task.grade}</span></div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-2"><strong>Drive link:</strong></div>
+                                <div class="col-10">
+                                    <c:if test="${task.link_code == null || task eq ''}">
+                                        <div>
+                                            <span style="color: red">
+                                                not uploaded 
+                                            </span>
+                                            <i  data-toggle="modal" data-target="#grade" class="fa fa-pen"></i> 
                                         </div>
-                                        <form action="task-detail" method="POSt">
-
-                                            <div class="modal-body">
-                                                <!-- Text area for editing comment -->
-                                                <input type="hidden" name="action" value="edit-comment">
-                                                <input type="hidden" name="cid" value="${c.comment_id}">
-                                                <input type="hidden" name="tid" value="${param.id}">
-                                                <textarea name="comment" class="form-control">${c.comment}</textarea>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-success">Save changes</button>
-                                            </div>
-                                        </form>
-                                    </div>
+                                    </c:if>
+                                    <c:if test="${task.link_code != null && task ne ''}">
+                                        <div>
+                                            <span>
+                                                <a href="${task.link_code}"target="_blank">${task.link_code}</a>
+                                            </span>
+                                            <i  data-toggle="modal" data-target="#grade" class="fa fa-pen"></i> 
+                                        </div>
+                                    </c:if>
                                 </div>
                             </div>
-                        </c:if>
-                        <span style="float: right">${c.time}</span>
-                        <hr>
-                    </c:forEach>
+                            <div class="row mb-3">
+                                <div class="col-2"><strong>Comment:</strong></div>
+                                <div class="col-12">
+
+                                    <form action="task-detail" method="POST">
+                                        <textarea name="comment" class="form-control"></textarea>
+                                        <input type="hidden" name="action" value="add-comment">
+                                        <input type="hidden" name="tid" value="${param.id}">
+                                        <hr>
+                                        <button class="btn btn-success btn-sm"> Add comment</button>
+                                    </form>
+                                    <hr>
+                                    <br>
+                                    <c:forEach var="c" items="${comments}">
+
+                                        <c:choose>
+                                            <c:when test="${c.lecturer != null}">
+                                                <span style="color: orange; font-weight: bold">
+                                                    ${c.lecturer.fullName} (Lecturer)
+                                                </span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span style="font-weight: bold">
+                                                    ${c.student.fullName} (Student)
+                                                </span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        </span>
+                                        : ${c.comment}  <c:if test="${account.getId() == c.student.account.id}">
+                                            <i class="fas fa-pen" style="margin-left: 10px; cursor: pointer;" data-toggle="modal" data-target="#editCommentModal${c.comment_id}"></i>
+                                            <div class="modal fade" id="editCommentModal${c.comment_id}" tabindex="-1" role="dialog" aria-labelledby="editCommentModalLabel${c.comment_id}" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="editCommentModalLabel${c.comment_id}">Edit Comment</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <form action="task-detail" method="POSt">
+
+                                                            <div class="modal-body">
+                                                                <!-- Text area for editing comment -->
+                                                                <input type="hidden" name="action" value="edit-comment">
+                                                                <input type="hidden" name="cid" value="${c.comment_id}">
+                                                                <input type="hidden" name="tid" value="${param.id}">
+                                                                <textarea name="comment" class="form-control">${c.comment}</textarea>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-success">Save changes</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:if>
+                                        <span style="float: right">${c.time}</span>
+                                        <hr>
+                                    </c:forEach>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="grade" tabindex="-1" role="dialog" aria-labelledby="gradeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="gradeModalLabel">Update drive link</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="task-detail" method="POST" onsubmit="return validateLink();">
+                                    <div class="modal-body">
+                                        <input type="hidden" name="action" value="update-link">
+                                        <input type="hidden" name="tid" value="${param.id}">
+                                        <input name="link_code" id="link_code" class="form-control" value="${task.link_code}">  
+                                        <span id="link_error" style="color: red; display: none;">Invalid URL. Please provide a valid link.</span>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-success">Save changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+            <jsp:include page="footer.jsp"></jsp:include>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="close" tabindex="-1" role="dialog" aria-labelledby="closeodalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="closeodalLabel">Close Task</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <form action="task-detail" method="POST">
-                    <div class="modal-body">
-                        Are you sure you want to make this task is done?
-                    </div>
-                    <div class="modal-footer">
-                        <input type="hidden" name="action" value="close">
-                        <input type="hidden" name="status" value="done">
-                        <input type="hidden" name="tid" value="${param.id}">
-                        <button  type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">No</button>
-                        <button type="submit" class="btn btn-danger btn-sm">Yes</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
- 
-</div>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var statusElement = document.querySelector(".status");
-        if (statusElement) {
-            var statusText = statusElement.textContent.trim().toLowerCase();
-            if (statusText === "in progress") {
-                statusElement.classList.add("in-progress");
-            } else if (statusText === "done") {
-                statusElement.classList.add("done");
+
+    <script>
+        function validateLink() {
+            const linkInput = document.getElementById('link_code').value;
+            const linkError = document.getElementById('link_error');
+            const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+
+            if (!urlPattern.test(linkInput)) {
+                linkError.style.display = 'block';
+                return false;
+            } else {
+                linkError.style.display = 'none';
+                return true;
             }
         }
-    });
-</script>
-<jsp:include page="footer.jsp"></jsp:include>
+    </script>
+ 

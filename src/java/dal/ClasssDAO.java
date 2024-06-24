@@ -138,8 +138,10 @@ public class ClasssDAO extends DBContext {
         return cl;
     }
 
+  
+
     public static void main(String[] args) {
         ClasssDAO cldao = new ClasssDAO();
-        System.out.println(cldao.getLatestClassIdByStudent(2));
+        
     }
 }

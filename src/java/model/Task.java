@@ -20,7 +20,8 @@ public class Task {
     private Objective objecttive;
     private Date start_date;
     private Date end_date;
-
+    private float grade;
+    private String link_code;
     public Task(String title, String description, String status, Objective objecttive) {
         this.title = title;
         this.description = description;

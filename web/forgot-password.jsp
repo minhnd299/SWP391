@@ -63,6 +63,7 @@
                                                 <c:if test="${suc}">
                                                     <p style="color: green">${suc}</p>
                                                 </c:if>
+                                                    ${domain}
                                             </div>
                                             <button type="submit" class="btn btn-primary btn-user btn-block">
                                                 Reset Password

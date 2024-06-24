@@ -1,10 +1,34 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<style>
+    .btn-spinner {
+        pointer-events: none;
+        opacity: 0.6;
+    }
 
+    .btn-spinner::after {
+        content: "";
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        margin-left: 0.5rem;
+        border: 0.2em solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: spinner 0.75s linear infinite;
+    }
+
+    @keyframes spinner {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+</style>
 <jsp:include page="header.jsp"></jsp:include>
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
-                             <jsp:include page="header-content.jsp"></jsp:include>
+        <jsp:include page="header-content.jsp"></jsp:include>
 
             <div class="container-fluid">
                 <h1 class="h3 mb-2 text-gray-800">Objective management</h1>
@@ -138,7 +162,7 @@
                 </div>
                 <form name="taskForm" id="taskForm" action="objective" method="POST" onsubmit="return validateForm()">
                     <div class="modal-body">
-                        <input class="form-control" type="hidden" name="action" value="add" placeholder="Enter task title">
+                        <input class="form-control" type="hidden" name="action" value="add">
                         <input class="form-control" type="hidden" name="cid" value="${param.cid}">
                         <label class="form-text">Description</label>
                         <textarea class="form-control" style="height: 400px" name="description"  placeholder="Enter objective description"></textarea>
@@ -146,7 +170,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success btn-sm">Add</button>
+                        <button id="submitBtn" type="submit" class="btn btn-success btn-sm">Add</button>
                     </div>
                 </form>
             </div>
@@ -172,6 +196,14 @@
 
         return isValid;
     }
+    document.getElementById('taskForm').addEventListener('submit', function (event) {
+        var submitBtn = document.getElementById('submitBtn');
+        submitBtn.classList.add('btn-spinner');
+        submitBtn.disabled = true;
+
+        // Allow the form to be submitted normally
+        return true;
+    });
 </script>
 
 <jsp:include page="footer.jsp"></jsp:include>

@@ -1,16 +1,26 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<!-- Including header -->
 <jsp:include page="header.jsp"></jsp:include>
+
+    <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
-                       <jsp:include page="header-content.jsp"></jsp:include>
 
+            <!-- Including header content -->
+        <jsp:include page="header-content.jsp"></jsp:include>
+
+            <!-- Task management -->
             <div class="container-fluid">
                 <h1 class="h3 mb-2 text-gray-800">Task management</h1>
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
+
+                        <!-- Add new button -->
                         <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#add">Add new</button>
+
+                        <!-- Dropdown filter by status -->
                         <li class="nav-item dropdown" style="float: right">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
                                role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -25,6 +35,8 @@
                             <a class="dropdown-item" href="task?oid=${param.oid}&AMP;status=done">Done</a>
                         </div>
                     </li>
+
+                    <!-- Success Notification -->
                     <c:if test="${not empty sessionScope.notification}">
                         <div class="alert alert-success alert-dismissible fade show" role="alert" style="text-align: center">
                             ${sessionScope.notification}
@@ -35,6 +47,8 @@
                             session.removeAttribute("notification");
                         %>
                     </c:if>
+
+                    <!-- Error Notification -->
                     <c:if test="${not empty sessionScope.notificationErr}">
                         <div class="alert alert-danger alert-dismissible fade show" role="alert"  style="text-align: center">
                             ${sessionScope.notificationErr}
@@ -59,11 +73,14 @@
                                     <th>Description</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
+                                    <th>Grade</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
+
+                                <!-- Duyệt qua các công việc -->
                                 <c:forEach var="t" items="${task}" varStatus="status">
                                     <tr>
                                         <td>${status.index + 1}</td>
@@ -71,7 +88,10 @@
                                         <td>${t.description}</td>
                                         <td>${t.start_date}</td>
                                         <td>${t.end_date}</td>
+                                        <td>${t.grade}</td>
                                         <td>
+
+                                            <!-- Display status -->
                                             <c:choose>
                                                 <c:when test="${t.status == 'in progress'}">
                                                     <button class="btn btn-info btn-sm">
@@ -91,8 +111,9 @@
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
-
                                         <td style="width: 199px">
+
+                                            <!-- Actions -->
                                             <c:choose>
                                                 <c:when test="${t.status == 'in progress'}">
                                                     <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit${t.task_id}">
@@ -123,6 +144,7 @@
                                         </td>
                                     </tr>
 
+                                    <!-- Update Modal -->
                                 <div class="modal fade" id="edit${t.task_id}" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
@@ -159,6 +181,8 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Delete Modal -->
                                 <div class="modal fade" id="delete${t.task_id}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel${t.task_id}" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
@@ -195,6 +219,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Add New Task Modal -->
     <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -237,5 +263,5 @@
     </div>
 </div>
 
-
+<!-- Including footer -->
 <jsp:include page="footer.jsp"></jsp:include>

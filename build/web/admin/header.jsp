@@ -14,7 +14,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>SB Admin 2 - Tables</title>
+        <title>Admin</title>
 
         <!-- Custom fonts for this template -->
         <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -65,9 +65,18 @@
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Users</span></a>
                 </li>
-
-                <!-- Divider -->
-                <hr class="sidebar-divider">
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/admin/new-list">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>News</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/admin/report">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Report</span></a>
+                </li>
+               
+              
 
 
 

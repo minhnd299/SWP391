@@ -19,5 +19,8 @@ public class Student {
     private Date birthDate;
     private int schoolYear;
     private Account account;
-
+    private String major;
+    private String company;
+    private String jobTitle;
+    private String linkCv;
 }

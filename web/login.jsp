@@ -67,6 +67,13 @@
                                                 <c:if test="${suc}">
                                                     <p style="color: green">${suc}</p>
                                                 </c:if>
+                                                <c:if test="${notificationErr}">
+                                                    <p style="color: red">${notificationErr}</p>
+                                                    <%
+                            
+                                                         session.removeAttribute("notificationErr");
+                                                    %>
+                                                </c:if>
                                             </div>
                                             <button type="submit" class="btn btn-primary btn-user btn-block">
                                                 Login

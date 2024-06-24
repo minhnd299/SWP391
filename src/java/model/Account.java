@@ -18,4 +18,6 @@ public class Account {
     private String email;
     private String status;
     private Role roleAccount;
+    private Student student;
+    private Lecturer lecturer;
 }
