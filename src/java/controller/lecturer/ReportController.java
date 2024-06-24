@@ -1,0 +1,104 @@
+package controller.lecturer;
+
+import dal.AccountDAO;
+import dal.ClasssDAO;
+import dal.LecturerDAO;
+import dal.QuestionDAO;
+import dal.ReportDAO;
+import dal.StudentDAO;
+import java.io.IOException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.util.List;
+import model.*;
+
+/**
+ *
+ * @author ADMIN
+ */
+@MultipartConfig
+@WebServlet(name = "ReportController", urlPatterns = {"/lecturer/report"})
+public class ReportController extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        ReportDAO reportDAO = new ReportDAO();
+        LecturerDAO ldao = new LecturerDAO();
+        ClasssDAO classsDAO = new ClasssDAO();
+        if (a != null && a.getRoleAccount().getRole_id() == 3) {
+            Lecturer lecturer = ldao.getByAccountId(a.getId());
+            List<model.Class> listClassOfLec = classsDAO.getAllClassByLecturer(lecturer.getLecturer_id());
+            String type = request.getParameter("type");
+            String classParam = request.getParameter("cid");
+            Integer class_id = (classParam != null && !classParam.isEmpty()) ? Integer.valueOf(classParam) : null;
+            List<Report> questions = reportDAO.getAllReportForLecturer(a.getId(), type, class_id);
+            request.setAttribute("questions", questions);
+            request.setAttribute("classes", listClassOfLec);
+            request.getRequestDispatcher("report.jsp").forward(request, response);
+        } else {
+            response.sendRedirect("../login");
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        ReportDAO reportDAO = new ReportDAO();
+        if (a != null && a.getRoleAccount().getRole_id() == 3) {
+            String action = request.getParameter("action");
+            if (action.equals("add")) {
+                int sid = Integer.parseInt(request.getParameter("sid"));
+                int cid = Integer.parseInt(request.getParameter("cid"));
+
+                String content = request.getParameter("content");
+                String type = request.getParameter("type");
+
+                Report report = new Report();
+                report.setContent(content);
+                report.setType(type);
+                report.setSender(a);
+                System.out.println(type + "" + sid);
+                report.setStudent_report(new StudentDAO().getById(cid).getAccount());
+                boolean isExsited = reportDAO.reportExists(new StudentDAO().getById(cid).getAccount().getId(), type);
+                try {
+                    if (isExsited) {
+                        session.setAttribute("notificationErr", "You already report " + type + " for this student!");
+                    } else {
+                        reportDAO.addReport(report);
+                        session.setAttribute("notification", "Report successfully!");
+                    }
+                } catch (Exception e) {
+                    session.setAttribute("notificationErr", "Failed to Reply question: " + e.getMessage());
+                }
+                response.sendRedirect("class-student?cid=" + cid);
+            }
+            if (action.equals("update")) {
+                int id = Integer.parseInt(request.getParameter("id"));
+
+                String content = request.getParameter("content");
+                try {
+                    reportDAO.updateReport(content, id);
+                    session.setAttribute("notification", "Report update successfully!");
+                } catch (Exception e) {
+                    session.setAttribute("notificationErr", "Failed to update: " + e.getMessage());
+                }
+                response.sendRedirect("report");
+            }
+
+        } else {
+            response.sendRedirect("../login");
+        }
+
+    }
+}

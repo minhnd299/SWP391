@@ -205,6 +205,7 @@ public class ObjecctiveDAO extends DBContext {
             throw new Exception("Error occurred while deleting objective: " + e.getMessage(), e);
         }
     }
+    
     public Objective getByIdd(int objectiveId) {
 
         LecturerDAO ldao = new LecturerDAO();
