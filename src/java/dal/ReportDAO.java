@@ -53,6 +53,10 @@ public class ReportDAO extends DBContext {
                         q.setUpdated_at(updatedTimestamp.toLocalDateTime());
                     }
                     q.setClass_name(rs.getString("class_name"));
+                    q.setKnowledge(rs.getFloat("knowledge"));
+                    q.setSoft_skill(rs.getFloat("soft_skill"));
+                    q.setFinal_grade(rs.getFloat("final"));
+                    q.setAttitude(rs.getFloat("attitude"));
                     q.setStudent_name(rs.getString("sName"));
                     q.setSender(accountDAO.getByID(rs.getInt("sender")));
                     q.setStudent_report(accountDAO.getByID(rs.getInt("student_report")));
@@ -65,7 +69,7 @@ public class ReportDAO extends DBContext {
         return reports;
     }
 
-    public List<Report> getAllReportForAdmin(  String type, Integer class_id) {
+    public List<Report> getAllReportForAdmin(String type, Integer class_id) {
         List<Report> reports = new ArrayList<>();
         List<Object> list = new ArrayList<>();
         AccountDAO accountDAO = new AccountDAO();
@@ -81,7 +85,7 @@ public class ReportDAO extends DBContext {
                          ON c.class_id = uc.class_id
                          JOIN Lecturer l on l.account_id = r.sender
                           where 1 = 1 """);
-            
+
             if (type != null && !type.trim().isEmpty()) {
                 query.append(" AND  type = ? ");
                 list.add(type);
@@ -107,6 +111,10 @@ public class ReportDAO extends DBContext {
                     if (updatedTimestamp != null) {
                         q.setUpdated_at(updatedTimestamp.toLocalDateTime());
                     }
+                    q.setKnowledge(rs.getFloat("knowledge"));
+                    q.setSoft_skill(rs.getFloat("soft_skill"));
+                    q.setAttitude(rs.getFloat("attitude"));
+                    q.setFinal_grade(rs.getFloat("final"));
                     q.setClass_name(rs.getString("class_name"));
                     q.setStudent_name(rs.getString("sName"));
                     q.setLecturer_name(rs.getString("lName"));
@@ -168,14 +176,18 @@ public class ReportDAO extends DBContext {
     }
 
     public void addReport(Report report) {
-        String query = "INSERT INTO [Report] (content, type, created_at, updated_at, sender, student_report) VALUES (?, ?, ?, ?, ?,?)";
+        String query = "INSERT INTO [Report] (content, type,knowledge, soft_skill, attitude,final ,  created_at, updated_at, sender, student_report) VALUES (?,?, ?,?,?,?, ?, ?, ?,?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, report.getContent());
             preparedStatement.setString(2, report.getType());
-            preparedStatement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
-            preparedStatement.setTimestamp(4, null);
-            preparedStatement.setInt(5, report.getSender().getId());
-            preparedStatement.setInt(6, report.getStudent_report().getId());
+            preparedStatement.setFloat(3, report.getKnowledge());
+            preparedStatement.setFloat(4, report.getSoft_skill());
+            preparedStatement.setFloat(5, report.getAttitude());
+            preparedStatement.setFloat(6, report.getFinal_grade());
+            preparedStatement.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
+            preparedStatement.setTimestamp(8, null);
+            preparedStatement.setInt(9, report.getSender().getId());
+            preparedStatement.setInt(10, report.getStudent_report().getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -183,12 +195,16 @@ public class ReportDAO extends DBContext {
     }
 
     // Method to update a news record
-    public void updateReport(String content, int id) {
-        String query = "UPDATE [Report] SET content = ?,  updated_at = ?  WHERE id = ?";
+    public void updateReport(String content, float knowledge, float soft_skill, float attitude, float final_grade, int id) {
+        String query = "UPDATE [Report] SET content = ?, knowledge = ?, soft_skill = ? , attitude = ?, final = ? , updated_at = ?  WHERE id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, content);
-            preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
-            preparedStatement.setInt(3, id);
+            preparedStatement.setFloat(2, knowledge);
+            preparedStatement.setFloat(3, soft_skill);
+            preparedStatement.setFloat(4, attitude);
+            preparedStatement.setFloat(5, final_grade);
+            preparedStatement.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
+            preparedStatement.setInt(7, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -220,8 +236,44 @@ public class ReportDAO extends DBContext {
         return -1;
     }
 
+    public Report getByID(int id) {
+
+        String query = """
+                       Select * from report where id  = ?""";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, id);
+
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    Report q = new Report();
+                    q.setId(rs.getInt("id"));
+                    q.setType(rs.getString("type"));
+                    q.setContent(rs.getString("content"));
+                    Timestamp createdTimestamp = rs.getTimestamp("created_at");
+                    if (createdTimestamp != null) {
+                        q.setCreated_at(createdTimestamp.toLocalDateTime());
+                    }
+                    Timestamp updatedTimestamp = rs.getTimestamp("updated_at");
+                    if (updatedTimestamp != null) {
+                        q.setUpdated_at(updatedTimestamp.toLocalDateTime());
+                    }
+                    q.setKnowledge(rs.getFloat("knowledge"));
+                    q.setSoft_skill(rs.getFloat("soft_skill"));
+                    q.setAttitude(rs.getFloat("attitude"));
+                    q.setFinal_grade(rs.getFloat("final"));
+                    return q;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public static void main(String[] args) {
         ReportDAO dAO = new ReportDAO();
-        System.out.println(dAO.reportExists(2, "Mid term"));
+        System.out.println(dAO.getByID(2));
     }
 }

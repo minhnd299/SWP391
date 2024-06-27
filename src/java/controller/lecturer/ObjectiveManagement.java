@@ -6,6 +6,7 @@ package controller.lecturer;
 
 import dal.LecturerDAO;
 import dal.ObjectiveDAO;
+import dal.UserClassDAO;
 import java.io.IOException;
 import model.*;
 import jakarta.servlet.ServletException;
@@ -15,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import send_mail.SendMail;
 
 /**
  *
@@ -50,7 +52,9 @@ public class ObjectiveManagement extends HttpServlet {
         HttpSession session = request.getSession();
         Account a = (Account) session.getAttribute("account");
         ObjectiveDAO ob = new ObjectiveDAO();
+        SendMail sendMail = new SendMail();
         LecturerDAO lecturerDAO = new LecturerDAO();
+        UserClassDAO userClassDAO = new UserClassDAO();
         String action = request.getParameter("action");
         String cid = request.getParameter("cid");
         if (a != null && a.getRoleAccount().getRole_id() == 3) {
@@ -59,7 +63,19 @@ public class ObjectiveManagement extends HttpServlet {
                 String description = request.getParameter("description");
                 try {
                     ob.addObjective(description, s.getLecturer_id(), Integer.parseInt(cid));
-                    session.setAttribute("notification", "Objective add successfully!");
+                    session.setAttribute("notification", "Objective added successfully!");
+
+                    // Construct the base URL dynamically
+                    String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+                    String objectiveUrl = baseUrl + "/student/objective";
+
+                    // Send email notification to all students in the class
+                    List<String> emails = userClassDAO.getEmailsByClassId(Integer.parseInt(cid));
+                    for (String email : emails) {
+                        String emailContent = "A new objective has been added to your class. You can view the details here: " + objectiveUrl;
+                        sendMail.sendMail(email, "New Objective Added", emailContent);
+                    }
+
                     response.sendRedirect("objective?cid=" + cid);
                 } catch (Exception e) {
                     session.setAttribute("notificationErr", e.getMessage());

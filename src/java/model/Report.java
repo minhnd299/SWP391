@@ -26,5 +26,8 @@ public class Report {
     private String class_name;
     private String student_name;
     private String lecturer_name;
-    
+    private float knowledge;
+    private float soft_skill;
+    private float attitude;
+    private float final_grade;
 }

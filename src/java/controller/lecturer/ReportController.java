@@ -63,14 +63,25 @@ public class ReportController extends HttpServlet {
 
                 String content = request.getParameter("content");
                 String type = request.getParameter("type");
+                float knowledge = Float.parseFloat(request.getParameter("knowledge"));
+                float soft_skill = Float.parseFloat(request.getParameter("soft_skill"));
+                float attitude = Float.parseFloat(request.getParameter("attitude"));
+                StudentDAO studentDAO = new StudentDAO();
+                Student studentAccount = studentDAO.getById(sid);
 
                 Report report = new Report();
                 report.setContent(content);
                 report.setType(type);
+                report.setKnowledge(knowledge);
+                report.setAttitude(attitude);
+                report.setSoft_skill(soft_skill);
+                float final_grade = (float) ((knowledge*0.4) +(attitude* 0.3) +(soft_skill * 0.3));
+                report.setFinal_grade(final_grade);
                 report.setSender(a);
                 System.out.println(type + "" + sid);
-                report.setStudent_report(new StudentDAO().getById(cid).getAccount());
-                boolean isExsited = reportDAO.reportExists(new StudentDAO().getById(cid).getAccount().getId(), type);
+
+                report.setStudent_report(studentAccount.getAccount());
+                boolean isExsited = reportDAO.reportExists(studentAccount.getAccount().getId(), type);
                 try {
                     if (isExsited) {
                         session.setAttribute("notificationErr", "You already report " + type + " for this student!");
@@ -87,8 +98,13 @@ public class ReportController extends HttpServlet {
                 int id = Integer.parseInt(request.getParameter("id"));
 
                 String content = request.getParameter("content");
+                float knowledge = Float.parseFloat(request.getParameter("knowledge"));
+                float soft_skill = Float.parseFloat(request.getParameter("soft_skill"));
+                float attitude = Float.parseFloat(request.getParameter("attitude"));
+                float final_grade = (float) ((knowledge*0.4) +(attitude* 0.3) +(soft_skill * 0.3));
+               
                 try {
-                    reportDAO.updateReport(content, id);
+                    reportDAO.updateReport(content, knowledge, soft_skill, attitude,final_grade, id);
                     session.setAttribute("notification", "Report update successfully!");
                 } catch (Exception e) {
                     session.setAttribute("notificationErr", "Failed to update: " + e.getMessage());
