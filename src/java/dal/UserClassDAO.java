@@ -43,7 +43,7 @@ public class UserClassDAO extends DBContext {
         return false;
     }
 
-     public List<UserClass> getAllUserClasses(int classId) {
+    public List<UserClass> getAllUserClasses(int classId) {
         List<UserClass> userClasses = new ArrayList<>();
         StudentDAO sdao = new StudentDAO();
         String query = "SELECT * FROM UserClass WHERE class_id = ?";
@@ -64,9 +64,28 @@ public class UserClassDAO extends DBContext {
         return userClasses;
     }
 
+    public List<String> getEmailsByClassId(int classId) {
+        List<String> emails = new ArrayList<>();
+        String query = """
+                       SELECT a.email FROM Student s JOIN UserClass uc ON s.student_id = uc.student_id 
+                       JOIN Account a on a.id = s.account_id
+                       WHERE uc.class_id  = ? """;
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, classId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    emails.add(rs.getString("email"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return emails;
+    }
+
     public static void main(String[] args) {
         UserClassDAO s = new UserClassDAO();
-        List<UserClass> l = s.getAllUserClasses(1);
+        List<String> l = s.getEmailsByClassId(2);
         System.out.println(l.size());
     }
 }
