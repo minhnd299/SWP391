@@ -124,19 +124,6 @@ public class ObjectiveDAO extends DBContext {
             System.out.println(e);
         }
     }
-    
-    public void updateObjectivee(String description, int objective_id) {
-        try {
-            String query = "UPDATE Objective SET description = ? where objective_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, description);
-            preparedStatement.setInt(2, objective_id);
-            preparedStatement.executeUpdate();
-
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-    }
 
     public void deleteObjective(int objectiveId) throws Exception {
         try {
@@ -178,53 +165,6 @@ public class ObjectiveDAO extends DBContext {
 //        }
 //    }
 
-    
-    public Objective getByIdd(int objectiveId) {
-
-        LecturerDAO ldao = new LecturerDAO();
-        Objective objective = null;
-        try {
-            String query = "SELECT * FROM Objective WHERE objective_id = ? ";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, objectiveId);
-            try (ResultSet rs = preparedStatement.executeQuery()) {
-                if (rs.next()) {
-                    objective = new Objective();
-                    objective.setObjective_id(rs.getInt("objective_id"));
-                    objective.setDescription(rs.getString("description"));
-                    objective.setStatus(rs.getString("status"));
-                    objective.setCreateAt(rs.getDate("create_at"));
-                    Lecturer l = ldao.getById(rs.getInt("createBy"));
-                    objective.setLecturer(l);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return objective;
-    }
-    
-//    public void deleteObjective(int objectiveId) throws Exception {
-//        try {
-//            // Check if there are any tasks associated with this objective
-//            String checkQuery = "SELECT COUNT(*) AS task_count FROM Task WHERE objective_id = ?";
-//            PreparedStatement checkStatement = connection.prepareStatement(checkQuery);
-//            checkStatement.setInt(1, objectiveId);
-//            ResultSet checkResultSet = checkStatement.executeQuery();
-//
-//            if (checkResultSet.next() && checkResultSet.getInt("task_count") > 0) {
-//                throw new Exception("Cannot delete objective. There are tasks associated with this objective.");
-//            } else {
-//                // Proceed with the deletion if no tasks are found
-//                String deleteQuery = "DELETE FROM Objective WHERE objective_id = ?";
-//                PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
-//                deleteStatement.setInt(1, objectiveId);
-//                deleteStatement.executeUpdate();
-//            }
-//        } catch (SQLException e) {
-//            throw new Exception("Error occurred while deleting objective: " + e.getMessage(), e);
-//        }
-//    }
     public static void main(String[] args) {
         ObjectiveDAO o = new ObjectiveDAO();
         List<Objective> l = o.getAllObjectiveByClass(2);

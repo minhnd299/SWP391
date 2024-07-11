@@ -52,31 +52,33 @@ public class LoginGoogleHandler extends HttpServlet {
         String suc = null;
         String err = null;
 
-        if (acc == null) {
+        String a[] = user.getEmail().split("@");
+        if (!a[1].equalsIgnoreCase("fpt.edu.vn")) {
+            err = "Your email are not about FBT!!!";
+        } else if (acc == null) {
             err = "You are not in the lab this semtemer!!!";
         } else {
-            HttpSession session = request.getSession();
-            session.setAttribute("acc", acc.getUsername() + "|" + acc.getPassword());
-            session.setAttribute("account", acc);
-                switch (acc.getRoleAccount().getRole_id()) {
-                    case 1 ->
-                        response.sendRedirect("admin/dashboard");
-                    case 2 ->
-                        response.sendRedirect("student/objective");
-                    case 3 ->
-                        response.sendRedirect("lecturer/class-list");
-                    default -> {
-                        break;
-                    }
-                }
-            suc = "Login successfully!!!";
+            String remember = null;
+            if (request.getParameter("remember") != null) {
+                remember = request.getParameter("remember");
+            }
+            if (remember == null) {
+                HttpSession session = request.getSession();
+                session.setAttribute("acc", acc.getUsername()+ "|" + acc.getPassword());
+                suc = "Login successfully!!!";
+            } else {
+                Cookie cookie = new Cookie("acc", acc.getUsername()+ "|" + acc.getPassword());
+                cookie.setMaxAge(12 * 30 * 24 * 60 * 60);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+                suc = "Login successfully!!!";
+            }
         }
 
         request.setAttribute("err", err);
         request.setAttribute("suc", suc);
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
-
     public static String getToken(String code) throws ClientProtocolException, IOException {
         try {
             String response = Request.Post(Constants.GOOGLE_LINK_GET_TOKEN)
@@ -86,13 +88,14 @@ public class LoginGoogleHandler extends HttpServlet {
                             .add("code", code)
                             .add("grant_type", Constants.GOOGLE_GRANT_TYPE).build())
                     .execute().returnContent().asString();
-
+         
+            
             JsonObject jobj = JsonParser.parseString(response).getAsJsonObject();
             if (jobj.has("error")) {
-
+               
                 throw new IOException("Error retrieving token: " + jobj.get("error").getAsString());
             }
-
+            
             return jobj.get("access_token").getAsString();
         } catch (HttpResponseException e) {
             throw e;
@@ -100,7 +103,6 @@ public class LoginGoogleHandler extends HttpServlet {
             throw e;
         }
     }
-
     public static UserGoogleDto getUserInfo(final String accessToken) throws ClientProtocolException, IOException {
         String link = Constants.GOOGLE_LINK_GET_USER_INFO + accessToken;
         String response = Request.Get(link).execute().returnContent().asString();

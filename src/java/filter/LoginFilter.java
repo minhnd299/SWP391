@@ -19,7 +19,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.Account;
 
 /**
  *
@@ -111,19 +110,24 @@ public class LoginFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resq = (HttpServletResponse) response;
         HttpSession session = req.getSession();
-        Account a = (Account) session.getAttribute("account");
-        if (a != null) {
-            switch (a.getRoleAccount().getRole_id()) {
-                case 1 ->
-                    resq.sendRedirect("admin/dashboard");
-                case 2 ->
-                    resq.sendRedirect("student/objective");
-                case 3 ->
-                    resq.sendRedirect("lecturer/class-list");
-                default -> {
+        boolean check = false;
+        if (session.getAttribute("acc") != null) {
+            check = true;
+        }
+
+        Cookie[] cookies = req.getCookies();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("acc")) {
+                    check = true;
                     break;
                 }
             }
+        }
+        
+        if(check){
+            resq.sendRedirect("index.html");
         }
 
         doBeforeProcessing(request, response);

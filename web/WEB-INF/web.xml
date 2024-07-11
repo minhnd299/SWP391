@@ -4,34 +4,18 @@
         <servlet-name>NewServlet</servlet-name>
         <servlet-class>controller.login.NewServlet</servlet-class>
     </servlet>
-    <!--    <servlet>
+<!--    <servlet>
         <servlet-name>ClassStudentManagement</servlet-name>
         <servlet-class>controller.admin.ClassStudentManagement</servlet-class>
     </servlet>-->
-    <servlet>
-        <servlet-name>ObjecctiveDAO</servlet-name>
-        <servlet-class>dal.ObjecctiveDAO</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ObjManagement</servlet-name>
-        <servlet-class>controller.lecturer.ObjManagement</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>NewServlet</servlet-name>
         <url-pattern>/NewServlet</url-pattern>
     </servlet-mapping>
-    <!--    <servlet-mapping>
+<!--    <servlet-mapping>
         <servlet-name>ClassStudentManagement</servlet-name>
         <url-pattern>/admin/class-student</url-pattern>
     </servlet-mapping>-->
-    <servlet-mapping>
-        <servlet-name>ObjecctiveDAO</servlet-name>
-        <url-pattern>/ObjecctiveDAO</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ObjManagement</servlet-name>
-        <url-pattern>/ObjManagement</url-pattern>
-    </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>

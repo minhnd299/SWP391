@@ -155,7 +155,7 @@ public class ClassManagement extends HttpServlet {
                 String name = request.getParameter("name");
                 int lid = Integer.parseInt(request.getParameter("lid"));
                 Lecturer l = lecturerDAO.getById(lid);
-                model.Class newClass = new model.Class(0, name, l, "ACTIVE", 0, "");
+                model.Class newClass = new model.Class(0, name, l, "ACTIVE", 0);
 
                 boolean isAdded = classsDAO.addClass(newClass);
                 if (isAdded) {
