@@ -55,12 +55,15 @@ public class ReportController extends HttpServlet {
         HttpSession session = request.getSession();
         Account a = (Account) session.getAttribute("account");
         ReportDAO reportDAO = new ReportDAO();
+        AccountDAO accountDAO = new AccountDAO();
+        StudentDAO sdao = new StudentDAO();
+
         if (a != null && a.getRoleAccount().getRole_id() == 3) {
             String action = request.getParameter("action");
             if (action.equals("add")) {
                 int sid = Integer.parseInt(request.getParameter("sid"));
                 int cid = Integer.parseInt(request.getParameter("cid"));
-
+                Account studentAcc = sdao.getById(sid).getAccount();
                 String content = request.getParameter("content");
                 String type = request.getParameter("type");
                 float knowledge = Float.parseFloat(request.getParameter("knowledge"));
@@ -75,10 +78,9 @@ public class ReportController extends HttpServlet {
                 report.setKnowledge(knowledge);
                 report.setAttitude(attitude);
                 report.setSoft_skill(soft_skill);
-                float final_grade = (float) ((knowledge*0.4) +(attitude* 0.3) +(soft_skill * 0.3));
+                float final_grade = (float) ((knowledge * 0.4) + (attitude * 0.3) + (soft_skill * 0.3));
                 report.setFinal_grade(final_grade);
                 report.setSender(a);
-                System.out.println(type + "" + sid);
 
                 report.setStudent_report(studentAccount.getAccount());
                 boolean isExsited = reportDAO.reportExists(studentAccount.getAccount().getId(), type);
@@ -87,6 +89,9 @@ public class ReportController extends HttpServlet {
                         session.setAttribute("notificationErr", "You already report " + type + " for this student!");
                     } else {
                         reportDAO.addReport(report);
+                        if (report.getFinal_grade() < 4 && report.getType().equals("Final")) {
+                            accountDAO.changeStatus(studentAcc.getId(), "inactive");
+                        }
                         session.setAttribute("notification", "Report successfully!");
                     }
                 } catch (Exception e) {
@@ -96,15 +101,22 @@ public class ReportController extends HttpServlet {
             }
             if (action.equals("update")) {
                 int id = Integer.parseInt(request.getParameter("id"));
-
+                StudentDAO studentDAO = new StudentDAO();
                 String content = request.getParameter("content");
                 float knowledge = Float.parseFloat(request.getParameter("knowledge"));
                 float soft_skill = Float.parseFloat(request.getParameter("soft_skill"));
                 float attitude = Float.parseFloat(request.getParameter("attitude"));
-                float final_grade = (float) ((knowledge*0.4) +(attitude* 0.3) +(soft_skill * 0.3));
-               
+                float final_grade = (float) ((knowledge * 0.4) + (attitude * 0.3) + (soft_skill * 0.3));
+
                 try {
-                    reportDAO.updateReport(content, knowledge, soft_skill, attitude,final_grade, id);
+                    reportDAO.updateReport(content, knowledge, soft_skill, attitude, final_grade, id);
+                    Report report = reportDAO.getByID(id);
+                    
+                    if (report.getFinal_grade() < 4 && report.getType().equals("Final")) {
+                          accountDAO.changeStatus(report.getStudent_report().getId(), "inactive");
+                    } else if (report.getFinal_grade() >= 4 && report.getType().equals("Final")) {
+                        accountDAO.changeStatus(report.getStudent_report().getId(), "active");
+                    }
                     session.setAttribute("notification", "Report update successfully!");
                 } catch (Exception e) {
                     session.setAttribute("notificationErr", "Failed to update: " + e.getMessage());

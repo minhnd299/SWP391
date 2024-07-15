@@ -37,9 +37,7 @@ public class ObjectiveController extends HttpServlet {
             Student student = studentDAO.getByAccountId(a.getId());
             int cid = classsDAO.getLatestClassIdByStudent(student.getStudent_id());
             List<Objective> o = ob.getAllObjectiveByClass(cid);
-
             request.setAttribute("o", o);
-
             request.getRequestDispatcher("objective_manage.jsp").forward(request, response);
         } else {
             response.sendRedirect("../login");

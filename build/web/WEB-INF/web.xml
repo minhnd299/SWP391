@@ -4,7 +4,7 @@
         <servlet-name>NewServlet</servlet-name>
         <servlet-class>controller.login.NewServlet</servlet-class>
     </servlet>
-    <!--    <servlet>
+<!--    <servlet>
         <servlet-name>ClassStudentManagement</servlet-name>
         <servlet-class>controller.admin.ClassStudentManagement</servlet-class>
     </servlet>-->
@@ -12,7 +12,7 @@
         <servlet-name>NewServlet</servlet-name>
         <url-pattern>/NewServlet</url-pattern>
     </servlet-mapping>
-    <!--    <servlet-mapping>
+<!--    <servlet-mapping>
         <servlet-name>ClassStudentManagement</servlet-name>
         <url-pattern>/admin/class-student</url-pattern>
     </servlet-mapping>-->

@@ -9,6 +9,7 @@ import java.util.List;
 import java.sql.*;
 import model.Class;
 import model.Lecturer;
+import model.Student;
 
 public class ClasssDAO extends DBContext {
 
@@ -138,8 +139,50 @@ public class ClasssDAO extends DBContext {
         return cl;
     }
 
+    public List<Student> getAllStudentsByClassId(Integer classId) {
+        List<Student> students = new ArrayList<>();
+
+        try {
+            String query = """
+                           SELECT s.* FROM Student s
+                           JOIN userClass uc ON s.student_id = uc.student_id
+                           WHERE uc.class_id = ?
+                           """;
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, classId);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                while (rs.next()) {
+                    Student student = new Student();
+                    student.setStudent_id(rs.getInt("student_id"));
+                    student.setFullName(rs.getString("first_name"));
+
+                    // Add other student fields as needed
+                    students.add(student);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return students;
+    }
+
+   
+
+    public void updateLecturerForClass(int classId, int newLecturerId) {
+        String sql = "UPDATE Class SET lecturer_id = ? WHERE class_id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, newLecturerId);
+            ps.setInt(2, classId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         ClasssDAO cldao = new ClasssDAO();
-        System.out.println(cldao.getLatestClassIdByStudent(2));
+
     }
 }

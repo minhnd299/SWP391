@@ -52,7 +52,7 @@
                                     <tr>
                                         <td>${status.index + 1}</td>
                                         <td>${o.description}</td>
-                                        <td>${o.lecturer.fullName}</td>
+                                        <td><a href="${pageContext.request.contextPath}/common/profile?id=${o.lecturer.accountLecturer.id}">${o.lecturer.fullName}</a></td>
                                         <td>${o.createAt}</td>
 
                                         <td style="width: 150px">

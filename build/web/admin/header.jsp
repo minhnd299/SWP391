@@ -27,7 +27,7 @@
 
         <!-- Custom styles for this page -->
         <link href="../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-
+      
     </head>
 
     <body id="page-top">
@@ -65,9 +65,28 @@
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Users</span></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/admin/new-list">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>News</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/admin/report">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Report</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/admin/event-manager">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Event</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/admin/support">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Support</span></a>
+                </li>
 
-                <!-- Divider -->
-                <hr class="sidebar-divider">
+
 
 
 
