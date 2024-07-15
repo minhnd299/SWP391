@@ -34,6 +34,8 @@ public class Login extends HttpServlet {
             throws ServletException, IOException {
         String user = request.getParameter("user");
         String password = request.getParameter("password");
+        HttpSession session = request.getSession();
+
         String remember = null;
         if (request.getParameter("remember") != null) {
             remember = request.getParameter("remember");
@@ -45,9 +47,12 @@ public class Login extends HttpServlet {
         if (a == null) {
             err = "UserName or Password incorrect!!!";
             System.out.println(err);
+        } else if (a.getStatus().equalsIgnoreCase("inactive")) {
+
+            session.setAttribute("notificationErr", "Your account had been blocked !");
+            response.sendRedirect("login");
         } else {
             if (remember == null) {
-                HttpSession session = request.getSession();
                 session.setAttribute("acc", user + "|" + password);
                 session.setAttribute("account", a);
                 switch (a.getRoleAccount().getRole_id()) {
@@ -61,10 +66,9 @@ public class Login extends HttpServlet {
                         break;
                     }
                 }
-
             } else {
                 Cookie cookie = new Cookie("acc", user + "|" + password);
-                HttpSession session = request.getSession();
+                
                 session.setAttribute("account", a);
                 cookie.setMaxAge(12 * 30 * 24 * 60 * 60);
                 cookie.setPath("/");
@@ -85,5 +89,7 @@ public class Login extends HttpServlet {
         request.setAttribute("user", user);
         request.setAttribute("err", err);
         request.setAttribute("suc", suc);
+        request.getRequestDispatcher("login.jsp").forward(request, response);
+
     }
 }

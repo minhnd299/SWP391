@@ -45,6 +45,22 @@ public class LecturerDAO extends DBContext {
         return null; // Subject not found
     }
 
+    public boolean createLecturer(Lecturer lecturer) {
+        String query = "INSERT INTO Lecturer (account_id, fullName, employeeNumber, department, specialization) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, lecturer.getAccountLecturer().getId());
+            ps.setString(2, lecturer.getFullName());
+            ps.setString(3, lecturer.getEmployeeNumber());
+            ps.setString(4, lecturer.getDepartment());
+            ps.setString(5, lecturer.getSpecialization());
+            int rowsInserted = ps.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public Lecturer getByAccountId(int accountId) {
         String sql = "SELECT * FROM Lecturer WHERE account_id = ?";
         try {
@@ -107,8 +123,43 @@ public class LecturerDAO extends DBContext {
         return lecturers;
     }
 
+    public Lecturer getLecturerOfStudent(int studentId) {
+
+        Dao dao = new Dao();
+        try {
+            // SQL query to find the lecturer of the student's class
+            String query = """
+                SELECT l.* FROM Lecturer l
+                JOIN Class c ON l.lecturer_id = c.lecturer_id
+                JOIN userClass uc ON c.class_id = uc.class_id
+                WHERE uc.student_id = ?
+                """;
+
+            // Preparing the SQL statement
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, studentId);
+
+            // Executing the query
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                Lecturer lecturer = new Lecturer();
+                lecturer.setLecturer_id(rs.getInt("lecturer_id"));
+                Account acc = dao.getAccountByID(rs.getInt("account_id"));
+                lecturer.setAccountLecturer(acc);
+                lecturer.setFullName(rs.getString("fullName"));
+                lecturer.setEmployeeNumber(rs.getString("employeeNumber"));
+                lecturer.setDepartment(rs.getString("department"));
+                lecturer.setSpecialization(rs.getString("specialization"));
+                return lecturer;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         LecturerDAO l = new LecturerDAO();
-        System.out.println(l.getById(1));
+        System.out.println(l.getLecturerOfStudent(1));
     }
 }

@@ -85,14 +85,14 @@ public class ClassManagement extends HttpServlet {
                     Sheet sheet = workbook.getSheetAt(0);
                     Row headerRow = sheet.getRow(0);
                     if (headerRow == null
-                            || !headerRow.getCell(0).getStringCellValue().equalsIgnoreCase("RollNumber")
-                            || !headerRow.getCell(1).getStringCellValue().equalsIgnoreCase("Email")
-                            || !headerRow.getCell(2).getStringCellValue().equalsIgnoreCase("Fullname")
-                            || !headerRow.getCell(3).getStringCellValue().equalsIgnoreCase("Phone Number")
-                            || !headerRow.getCell(4).getStringCellValue().equalsIgnoreCase("Major")
-                            || !headerRow.getCell(5).getStringCellValue().equalsIgnoreCase("Company")
-                            || !headerRow.getCell(6).getStringCellValue().equalsIgnoreCase("Job Title")
-                            || !headerRow.getCell(7).getStringCellValue().equalsIgnoreCase("Link CV")) {
+                            || !headerRow.getCell(0).getStringCellValue().trim().equalsIgnoreCase("Roll Number")
+                            || !headerRow.getCell(1).getStringCellValue().trim().equalsIgnoreCase("Email")
+                            || !headerRow.getCell(2).getStringCellValue().trim().equalsIgnoreCase("Fullname")
+                            || !headerRow.getCell(3).getStringCellValue().trim().equalsIgnoreCase("Phone Number")
+                            || !headerRow.getCell(4).getStringCellValue().trim().equalsIgnoreCase("Major")
+                            || !headerRow.getCell(5).getStringCellValue().trim().equalsIgnoreCase("Company")
+                            || !headerRow.getCell(6).getStringCellValue().trim().equalsIgnoreCase("Job Title")
+                            || !headerRow.getCell(7).getStringCellValue().trim().equalsIgnoreCase("Link CV")) {
 
                         session.setAttribute("notificationErr", "File format is incorrect. Please download the templete!");
                         response.sendRedirect("class-list");
@@ -122,8 +122,10 @@ public class ClassManagement extends HttpServlet {
                             account.setEmail(email);
                             String username = email.split("@")[0];
                             account.setUsername(username);
+                            account.setPhone(major);
                             String password = PasswordUtils.generateRandomPassword();
                             account.setPassword(password);
+                            account.setPhone(phoneNumber);
                             account.setRoleAccount(r); // 
                             boolean isAdded = accountDAO.create(account);
                             if (isAdded) {
@@ -131,6 +133,11 @@ public class ClassManagement extends HttpServlet {
                                 student.setAccount(accountDAO.getLatestAccount());
                                 student.setFullName(fullName);
                                 student.setRollNumber(rollNumber);
+                                student.setMajor(major);
+                                student.setCompany(company);
+                                student.setJobTitle(jobTitle);
+                                student.setLinkCv(linkCv);
+
                                 boolean isAddStudent = studentDAO.create(student);
                                 if (isAddStudent) {
                                     sendMail.sendMailErrol(email, username, password);
@@ -163,7 +170,7 @@ public class ClassManagement extends HttpServlet {
                 String name = request.getParameter("name");
                 int lid = Integer.parseInt(request.getParameter("lid"));
                 Lecturer l = lecturerDAO.getById(lid);
-                model.Class newClass = new model.Class(0, name, l, "ACTIVE", 0);
+                model.Class newClass = new model.Class(0, name, l, "ACTIVE", 0, "");
 
                 boolean isAdded = classsDAO.addClass(newClass);
                 if (isAdded) {
@@ -174,6 +181,18 @@ public class ClassManagement extends HttpServlet {
                     response.sendRedirect("class-list");
                 }
 
+            }
+            if (action.equals("change")) {
+                int classId = Integer.parseInt(request.getParameter("cid"));
+                int newLecturerId = Integer.parseInt(request.getParameter("newLid"));
+                try {
+                    classsDAO.updateLecturerForClass(classId, newLecturerId);
+                    request.getSession().setAttribute("notification", "Lecturer changed successfully.");
+
+                } catch (Exception e) {
+                    session.setAttribute("notificationErr", "Add failed! Please try again!");
+                }
+                response.sendRedirect("class-list");
             }
         } else {
             response.sendRedirect("../login");

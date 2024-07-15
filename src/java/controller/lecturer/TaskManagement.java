@@ -34,7 +34,7 @@ public class TaskManagement extends HttpServlet {
 
         if (a != null && a.getRoleAccount().getRole_id() == 3) {
             taskDAO.updateTaskStatuses();
-            List<Task> task = taskDAO.getAllTaskyObjectAndFilter(oId, status);
+            List<Task> task = taskDAO.getAllTaskyObject(oId, status);
             request.setAttribute("task", task);
             request.getRequestDispatcher("task.jsp").forward(request, response);
         } else {

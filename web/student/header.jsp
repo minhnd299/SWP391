@@ -65,6 +65,11 @@
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Question</span></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/student/document-manager">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Document</span></a>
+                </li>
                 <hr class="sidebar-divider d-none d-md-block">
                 
                 <hr class="sidebar-divider d-none d-md-block">

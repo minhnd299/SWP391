@@ -61,13 +61,14 @@ public class Logout extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         session.removeAttribute("acc");
+        session.removeAttribute("account");
 
         Cookie deleteCookie = new Cookie("acc", "");
         deleteCookie.setMaxAge(0);
         deleteCookie.setPath("/");
         response.addCookie(deleteCookie);
-
         response.sendRedirect("login");
+        
     }
 
     /**

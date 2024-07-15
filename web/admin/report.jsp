@@ -34,13 +34,34 @@
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Filter by Class
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right animated--grow-in" aria-labelledby="navbarDropdown">
+                        <div class="dropdown-menu dropdown-menu-right animated--grow-in" aria-labelledby="navbarDropdown" style="max-height: 300px; overflow-y: auto;">
                             <a class="dropdown-item ${param.cid == null ? 'active' : ''}" href="report?type=${param.type}">All</a>
                             <c:forEach var="q" items="${listClass}" varStatus="status">
                                 <a class="dropdown-item ${param.cid != null && param.cid == q.class_id ? 'active' : ''}" href="report?cid=${q.class_id}&amp;type=${param.type}">${q.class_name}</a>
                             </c:forEach>
                         </div>
                     </li>
+
+                </div>
+                <div class="py-3 row">
+                    <c:if test="${not empty param.cid}">
+                        <a class="m-0 font-weight-bold text-primary col-md-3" ></a>
+                        <a class="m-0 font-weight-bold text-primary col-md-3" type="button" href="student-report?type=Mid term&class=${param.cid}">Export mid term report</a>
+                        <a class="m-0 font-weight-bold text-primary col-md-3" type="button" href="student-report?type=Final&class=${param.cid}">Export final report</a>
+                        <a href="${pageContext.request.contextPath}/admin/student-report?class=${param.cid}&reportType=passFail" class="m-0 font-weight-bold text-primary col-md-3">
+                            Export Pass/Fail Report
+                        </a>
+
+                    </c:if>
+                    <c:if test="${empty param.cid}">
+                        <a class="m-0 font-weight-bold text-primary col-md-3" ></a>
+                        <a class="m-0 font-weight-bold text-primary col-md-5" onclick="showAlert()"  >Export mid term report</a>
+                        <a class="m-0 font-weight-bold text-primary col-md-4" onclick="showAlert()" >Export final report</a>
+                        <a  class="m-0 font-weight-bold text-primary col-md-4"  onclick="showAlert()">
+                            Export Pass/Fail Report
+                        </a>
+
+                    </c:if>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -78,7 +99,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div><script>
+            function showAlert() {
+                alert(`Please select a class to export!`);
+            }
+        </script>
     </div>
 </div>
 <jsp:include page="footer.jsp"></jsp:include>

@@ -5,10 +5,12 @@
 package dal;
 
 import java.beans.Statement;
+import java.security.SecureRandom;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import model.Account;
 import model.Lecturer;
@@ -117,13 +119,29 @@ public class AccountDAO extends DBContext {
     }
 
     public boolean create(Account account) {
-        String query = "INSERT INTO Account (username, password, email, roleId, status) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Account (username, password, email, roleId, status, phone) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, account.getUsername());
             ps.setString(2, account.getPassword());
             ps.setString(3, account.getEmail());
             ps.setInt(4, 2); // student role
             ps.setString(5, "active");
+            ps.setString(6, account.getPhone());
+            int row = ps.executeUpdate();
+            return row > 0;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+    public boolean createLecturer(Account account) {
+        String query = "INSERT INTO Account (username, password, email, roleId, status, phone) VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, account.getUsername());
+            ps.setString(2, account.getPassword());
+            ps.setString(3, account.getEmail());
+            ps.setInt(4, 3); 
+            ps.setString(5, "active");
+            ps.setString(6, account.getPhone());
             int row = ps.executeUpdate();
             return row > 0;
         } catch (SQLException e) {
@@ -178,10 +196,5 @@ public class AccountDAO extends DBContext {
         }
     }
 
-    public static void main(String[] args) {
-        AccountDAO accountDAO = new AccountDAO();
-        Account a = accountDAO.getByID(2);
-        System.out.println(a);
-
-    }
+   
 }

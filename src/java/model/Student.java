@@ -23,4 +23,6 @@ public class Student {
     private String company;
     private String jobTitle;
     private String linkCv;
+    private String status;
+    private Attendance attendance;
 }

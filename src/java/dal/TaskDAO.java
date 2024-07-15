@@ -27,7 +27,7 @@ public class TaskDAO extends DBContext {
      * @param status
      * @return
      */
-    public List<Task> getAllTaskyObjectAndFilter(Integer objective_id, String status) {
+    public List<Task> getAllTaskyObject(Integer objective_id, String status) {
         List<Task> tasks = new ArrayList<>();
         List<Object> list = new ArrayList<>();
         ObjectiveDAO objectiveDAO = new ObjectiveDAO();

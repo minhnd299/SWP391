@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import model.Account;
 import model.Student;
 import model.UserClass;
 
@@ -43,9 +44,63 @@ public class UserClassDAO extends DBContext {
         return false;
     }
 
+    public List<Student> getStudentsNotInClass(int classId) {
+        List<Student> students = new ArrayList<>();
+
+        String sql = " SELECT * FROM Student WHERE student_id NOT IN (SELECT student_id FROM UserClass WHERE class_id = ?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, classId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Student s = new Student();
+                s.setStudent_id(rs.getInt("student_id"));
+                s.setFullName(rs.getString("fullName"));
+                s.setRollNumber(rs.getString("rollNumber"));
+                s.setBirthDate(rs.getDate("birthDate"));
+                s.setSchoolYear(rs.getInt("schoolYear"));
+                s.setCompany(rs.getString("Company"));
+                s.setMajor(rs.getString("Major"));
+                s.setJobTitle(rs.getString("JobTitle"));
+                s.setLinkCv(rs.getString("LinkCV"));
+                students.add(s);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return students;
+    }
+
+    public boolean canDeleteUserClass(int userClassId) {
+        String sql = "SELECT COUNT(*) FROM Attendance WHERE userClass_id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userClassId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) == 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void deleteUserClass(int userClassId) {
+        String sql = "DELETE FROM UserClass WHERE userClass_id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userClassId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<UserClass> getAllUserClasses(int classId) {
         List<UserClass> userClasses = new ArrayList<>();
         StudentDAO sdao = new StudentDAO();
+        ClasssDAO cdao = new ClasssDAO();
         String query = "SELECT * FROM UserClass WHERE class_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, classId);
@@ -54,6 +109,8 @@ public class UserClassDAO extends DBContext {
                     UserClass userClass = new UserClass();
                     userClass.setId(rs.getInt("userClass_id"));
                     Student s = sdao.getById(rs.getInt("student_id"));
+                    model.Class c = cdao.getById(rs.getInt("class_id"));
+                    userClass.setClasses(c);
                     userClass.setStudent(s);
                     userClasses.add(userClass);
                 }

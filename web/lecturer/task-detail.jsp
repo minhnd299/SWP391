@@ -187,7 +187,8 @@
                         <div class="modal-body">
                             <input type="hidden" name="action" value="grade-task">
                             <input type="hidden" name="tid" value="${param.id}">
-                            <input name="grade" class="form-control" value="${task.grade}">  
+                            <input name="grade" id="gradeInput" type="number" step="0.1" class="form-control" value="${task.grade}" required>
+                    <span id="gradeError" style="color: red;"></span>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -200,8 +201,26 @@
         <!-- Include Footer -->
         <jsp:include page="footer.jsp"></jsp:include>
 
-        <!-- JavaScript for updating status -->
-        <script>
-             
-        </script>
+<script>
+function validateGradeForm() {
+    var grade = document.getElementById('gradeInput').value.trim();
+    
+    // Validate if grade is not empty
+    if (grade === "") {
+        document.getElementById('gradeError').innerText = "Grade is required.";
+        return false; // Prevent form submission
+    }
+    
+    // Validate if grade is a valid number between 0 and 10
+    if (isNaN(grade) || parseFloat(grade) < 0 || parseFloat(grade) > 10) {
+        document.getElementById('gradeError').innerText = "Grade must be a number between 0 and 10.";
+        return false; // Prevent form submission
+    }
+    
+    // Clear any previous error messages
+    document.getElementById('gradeError').innerText = "";
+    
+    return true; // Allow form submission
+}
+</script>
 

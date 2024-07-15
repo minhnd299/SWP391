@@ -71,6 +71,11 @@
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Report</span></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/lecturer/viewClass">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Attendance</span></a>
+                </li>
                 <hr class="sidebar-divider d-none d-md-block">
 
 

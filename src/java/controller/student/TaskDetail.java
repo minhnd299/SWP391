@@ -58,7 +58,7 @@ public class TaskDetail extends HttpServlet {
             if (action.equals("add-comment")) {
                 String comment = request.getParameter("comment");
                 try {
-                    commentDAO.addLecturerComment(tid, lid, comment);
+                    commentDAO.addStudentComment(tid, tid, comment);
                     session.setAttribute("notification", "Add comment success!");
                     response.sendRedirect("task-detail?id=" + tid);
                 } catch (Exception e) {

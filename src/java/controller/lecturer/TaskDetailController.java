@@ -92,6 +92,12 @@ public class TaskDetailController extends HttpServlet {
             if (action.equals("grade-task")) {
                 float grade = Float.parseFloat(request.getParameter("grade"));
                 
+                if(grade < 0 || grade > 10){
+                    session.setAttribute("notificationErr", "Gradde must be between 0 and 10");
+                    response.sendRedirect("task-detail?id=" + tid);
+                    return;
+                }
+                
                 Task currentTask = taskDAO.getById(tid);
                 if (grade == currentTask.getGrade()) {
                     response.sendRedirect("task-detail?id=" + tid);

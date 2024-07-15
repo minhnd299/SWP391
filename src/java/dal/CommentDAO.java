@@ -76,7 +76,6 @@ public class CommentDAO extends DBContext {
                            SET comment = ? , timestamp = CURRENT_TIMESTAMP
                            WHERE comment_id = ?
                            """;
-
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, newComment);
             preparedStatement.setInt(2, commentId);

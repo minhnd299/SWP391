@@ -68,6 +68,7 @@
                     </c:if>
 
                 </div>
+                            
                 <div class="card-body">
                     <div class="table-responsive">
 
@@ -76,6 +77,10 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Type</th>
+                                    <th>Knowledge</th>
+                                    <th>Soft Skill</th>
+                                    <th>Attitude</th>
+                                    <th>final grade</th>
                                     <th>Content</th>
                                     <th>Class</th>
                                     <th>Student</th>
@@ -89,6 +94,10 @@
                                     <tr>
                                         <td>${status.index + 1}</td>
                                         <td style=" color: ${q.type eq 'Mid term' ? 'green' : 'red'}">  ${q.type}    </td>
+                                        <td>${q.knowledge}</td>
+                                        <td>${q.soft_skill}</td>
+                                        <td>${q.attitude}</td>
+                                        <td>${q.final_grade}</td>
                                         <td>${q.content}</td>
                                         <td>${q.class_name}</td>
                                         <td>${q.student_name}</td>
@@ -116,17 +125,27 @@
 
                                                     <label class="form-text">Type</label>
                                                     <input class="form-control" name="type" readonly="" value="${q.type}" type="text" placeholder="Enter question type">
+
+                                                    <hr>
+                                                    <label class="form-text">Knowledge</label>
+                                                    <input class="form-control" name="knowledge" step="0.1" id="knowledge${q.id}" type="number" value="${q.knowledge}" placeholder="Enter knowledge grade">
+                                                    <hr>
+                                                    <label class="form-text">Soft Skill</label>
+                                                    <input class="form-control" name="soft_skill" step="0.1" id="soft_skill${q.id}" type="number" value="${q.soft_skill}" placeholder="Enter Soft Skill grade">
+                                                    <hr>
+                                                    <label class="form-text">Attitude</label>
+                                                    <input class="form-control" name="attitude" step="0.1"id="attitude${q.id}" type="number" value="${q.attitude}" placeholder="Enter attitude grade">
                                                     <hr>
                                                     <label class="form-text">Content</label>
-                                                    <textarea class="form-control" name="content" type="text" placeholder="Enter content" rows="6">${q.content}</textarea>
+                                                    <textarea class="form-control" name="content" type="text" placeholder="Enter content" rows="3">${q.content}</textarea>
                                                     <span id="updateDescriptionError${q.id}" style="color: red; font-size: smaller"></span>
+
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                     <button type="submit" class="btn btn-success">Save changes</button>
                                                 </div>
                                             </form>
-
                                         </div>
                                     </div>
                                 </div>
@@ -141,23 +160,26 @@
     </div>
 </div>
 <script>
-    function validateUpdateForm(id) {
-        var isValid = true;
+    function validateUpdateForm(qId) {
+        var knowledge = document.getElementById('knowledge' + qId).value;
+        var softSkill = document.getElementById('soft_skill' + qId).value;
+        var attitude = document.getElementById('attitude' + qId).value;
 
-        // Get form elements
-        var type = document.forms["updateForm" + id]["type"].value;
-        var content = document.forms["updateForm" + id]["content"].value;
-
-        // Clear previous error messages
-        document.getElementById("updateDescriptionError" + id).innerText = "";
-
-        // Validate content
-        if (content === "") {
-            document.getElementById("updateDescriptionError" + id).innerText = "Content is required.";
-            isValid = false;
+        // Validate not null and within range 0-10
+        if (knowledge === "" || isNaN(knowledge) || knowledge < 0 || knowledge > 10) {
+            document.getElementById('updateDescriptionError' + qId).innerText = "Knowledge grade must be between 0 and 10.";
+            return false;
+        }
+        if (softSkill === "" || isNaN(softSkill) || softSkill < 0 || softSkill > 10) {
+            document.getElementById('updateDescriptionError' + qId).innerText = "Soft Skill grade must be between 0 and 10.";
+            return false;
+        }
+        if (attitude === "" || isNaN(attitude) || attitude < 0 || attitude > 10) {
+            document.getElementById('updateDescriptionError' + qId).innerText = "Attitude grade must be between 0 and 10.";
+            return false;
         }
 
-        return isValid;
+        return true; // Form submission allowed
     }
 
 </script>
