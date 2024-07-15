@@ -6,8 +6,10 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import model.Account;
 import model.Question;
 import model.Report;
+import model.Student;
 
 public class ReportDAO extends DBContext {
 
@@ -243,7 +245,7 @@ public class ReportDAO extends DBContext {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, id);
-
+            AccountDAO o = new AccountDAO();
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
                     Report q = new Report();
@@ -258,6 +260,8 @@ public class ReportDAO extends DBContext {
                     if (updatedTimestamp != null) {
                         q.setUpdated_at(updatedTimestamp.toLocalDateTime());
                     }
+                    Account s= o.getByID(rs.getInt("student_report"));
+                    q.setStudent_report(s);
                     q.setKnowledge(rs.getFloat("knowledge"));
                     q.setSoft_skill(rs.getFloat("soft_skill"));
                     q.setAttitude(rs.getFloat("attitude"));
