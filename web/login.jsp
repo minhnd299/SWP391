@@ -54,7 +54,7 @@
                                                        id="exampleInputPassword" placeholder="Password">
                                             </div>
                                             <div class="form-group">
-                                                <div class="custom-control custom-checkbox small">
+                                                <div class="custom-control custom-checkbox small" style="display: none;">
                                                     <input type="checkbox" name="remember" class="custom-control-input" id="customCheck">
                                                     <label class="custom-control-label" for="customCheck">Remember
                                                         Me</label>
@@ -66,6 +66,13 @@
                                                 </c:if>
                                                 <c:if test="${suc}">
                                                     <p style="color: green">${suc}</p>
+                                                </c:if>
+                                                <c:if test="${notificationErr}">
+                                                    <p style="color: red">${notificationErr}</p>
+                                                    <%
+                            
+                                                         session.removeAttribute("notificationErr");
+                                                    %>
                                                 </c:if>
                                             </div>
                                             <button type="submit" class="btn btn-primary btn-user btn-block">

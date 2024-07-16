@@ -13,7 +13,7 @@ public class Constants {
 
 	public static String GOOGLE_CLIENT_ID = "724399355815-tbu2j1p2nhuancu8fr08i3tg6ceh08sj.apps.googleusercontent.com";
 
-	public static String GOOGLE_CLIENT_SECRET = "key";
+	public static String GOOGLE_CLIENT_SECRET = "";
 
 	public static String GOOGLE_REDIRECT_URI = "http://localhost:9999/pro/LoginGoogleHandler";
 

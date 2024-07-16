@@ -70,6 +70,19 @@ public class LecturerDAO extends DBContext {
         return null; // Subject not found
     }
 
+    public boolean updateLecturer(int sId, String fullName) {
+        String query = "UPDATE Lecturer SET fullName = ?  WHERE lecturer_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, fullName);
+            ps.setInt(2, sId);
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public List<Lecturer> getAllLecturer() {
         List<Lecturer> lecturers = new ArrayList<>();
         String sql = "SELECT * FROM Lecturer";

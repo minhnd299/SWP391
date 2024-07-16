@@ -10,29 +10,29 @@
             <!-- Including header content -->
         <jsp:include page="header-content.jsp"></jsp:include>
 
-                <!-- Success Notification -->
-            <c:if test="${not empty sessionScope.notification}">
-                <div class="alert alert-success alert-dismissible fade show" role="alert" style="text-align: center">
-                    ${sessionScope.notification}
-                    <button type="button" class="btn-danger" data-dismiss="alert" aria-label="Close">x</button>
-                </div>
-                <%
-                    // Clear the notification after displaying it
-                    session.removeAttribute("notification");
-                %>
-            </c:if>
+            <!-- Success Notification -->
+        <c:if test="${not empty sessionScope.notification}">
+            <div class="alert alert-success alert-dismissible fade show" role="alert" style="text-align: center">
+                ${sessionScope.notification}
+                <button type="button" class="btn-danger" data-dismiss="alert" aria-label="Close">x</button>
+            </div>
+            <%
+                // Clear the notification after displaying it
+                session.removeAttribute("notification");
+            %>
+        </c:if>
 
-            <!-- Error Notification -->
-            <c:if test="${not empty sessionScope.notificationErr}">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert"  style="text-align: center">
-                    ${sessionScope.notificationErr}
-                    <button type="button" class="btn-danger" data-dismiss="alert" >x</button>
-                </div>
-                <%
-                    // Clear the notification after displaying it
-                    session.removeAttribute("notificationErr");
-                %>
-            </c:if>
+        <!-- Error Notification -->
+        <c:if test="${not empty sessionScope.notificationErr}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert"  style="text-align: center">
+                ${sessionScope.notificationErr}
+                <button type="button" class="btn-danger" data-dismiss="alert" >x</button>
+            </div>
+            <%
+                // Clear the notification after displaying it
+                session.removeAttribute("notificationErr");
+            %>
+        </c:if>
 
         <div class="container-fluid">
             <h1 class="h3 mb-2 text-gray-800">Class list: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="date-now"></span></h1>
@@ -46,7 +46,6 @@
                         <form action="${run == "add" ? "attendance" : "updateAttendance"}" method="post" style="width: 100%">
 
                             <div style="text-align: center; margin: auto">
-                                
                                 <input type="date" id="date-in"/>
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <tr>
@@ -69,6 +68,7 @@
 
                                 </table>
                                 <button style="margin-top: 15px" id="button">Save</button>
+
                             </div>
                         </form>
                     </div>
@@ -114,7 +114,7 @@
                                     <th>Attendance</th>
                                 </tr>`;
                     let length = data.length;
-                    if(length < 1) {
+                    if (length < 1) {
                         read += '<tr><td colspan="4">No Data</td></tr>';
                     }
                     for (i = 0; i < length; i++) {
@@ -134,6 +134,7 @@
                     console.log($('#root1').html());
                     $('#date-now').html($('#date-in').val());
                     if (today === $('#date-in').val()) {
+//                        location.reload();
                         $('#button').show()();
                         $('.che').removeAttr('disabled');
                     } else {
@@ -147,4 +148,3 @@
 </script>
 
 <jsp:include page="footer.jsp"></jsp:include>
-

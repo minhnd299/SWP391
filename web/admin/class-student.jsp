@@ -66,10 +66,12 @@
                 </ul>
             </nav>
             <div class="container-fluid">
-                <h1 class="h3 mb-2 text-gray-800">Class list</h1>
+                <h1 class="h3 mb-2 text-gray-800">Class ${classList[0].classes.class_name}</h1>
                 <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">All classes</h6>
+                    <div class="card-header py-3 row">
+                        <h6 class="m-0 font-weight-bold text-primary col-md-4">Class ${classList[0].classes.class_name}</h6>
+                        <a class="m-0 font-weight-bold text-primary col-md-4" type="button" href="student-report?type=Mid term&class=${param.cid}">Export mid term report</a>
+                        <a class="m-0 font-weight-bold text-primary col-md-4" type="button" href="student-report?type=Final&class=${param.cid}">Export final report</a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -79,14 +81,33 @@
                                         <th>STT</th>
                                         <th>Student</th>
                                         <th>RollNumber</th>
+                                        <th>Email</th>
+                                        <th>Phone Number</th>
+                                        <th>Major</th>
+                                        <th>Company</th>
+                                        <th>Job Title</th>
+                                        <th>Link CV</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 <c:forEach var="c" items="${classList}" varStatus="status">
-                                    <tr>
+                                    <tr> 
+
                                         <td>${status.index + 1}</td>
-                                        <td>${c.student.fullName}</td>
+                                        <td><a href="${pageContext.request.contextPath}/common/profile?id=${c.student.account.id}">${c.student.fullName}</a></td>
                                         <td>${c.student.rollNumber}</td>
+                                        <td>${c.student.account.email}</td>
+                                        <td>${c.student.account.phone}</td>
+                                        <td>${c.student.major}</td>
+                                        <td>${c.student.company}</td>
+                                        <td>${c.student.jobTitle}</td>
+
+                                        <td>
+                                            <button type="button" class="btn btn-primary" onclick="window.open('${c.student.linkCv}', '_blank')">
+                                                View CV
+                                            </button>
+                                        </td>
+
                                     </tr>
                                 </c:forEach>
                             </tbody>
@@ -96,7 +117,5 @@
             </div>
         </div>
     </div>
-</div>
 
-<jsp:include page="footer.jsp"></jsp:include>
-
+    <jsp:include page="footer.jsp"></jsp:include>

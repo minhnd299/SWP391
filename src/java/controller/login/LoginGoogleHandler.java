@@ -44,6 +44,10 @@ public class LoginGoogleHandler extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if (request.getParameter("error") != null) {
+            response.sendRedirect("login");
+            return;
+        }
         String code = request.getParameter("code");
         String accessToken = getToken(code);
         UserGoogleDto user = getUserInfo(accessToken);
@@ -51,27 +55,32 @@ public class LoginGoogleHandler extends HttpServlet {
         Account acc = d.getAccountByEmail(user.getEmail());
         String suc = null;
         String err = null;
+        
 
         String a[] = user.getEmail().split("@");
-        if (!a[1].equalsIgnoreCase("fpt.edu.vn")) {
-            err = "Your email are not about FBT!!!";
-        } else if (acc == null) {
+        if (acc == null) {
             err = "You are not in the lab this semtemer!!!";
         } else {
             String remember = null;
             if (request.getParameter("remember") != null) {
                 remember = request.getParameter("remember");
             }
-            if (remember == null) {
                 HttpSession session = request.getSession();
+            if (remember == null) {
                 session.setAttribute("acc", acc.getUsername()+ "|" + acc.getPassword());
-                suc = "Login successfully!!!";
-            } else {
-                Cookie cookie = new Cookie("acc", acc.getUsername()+ "|" + acc.getPassword());
-                cookie.setMaxAge(12 * 30 * 24 * 60 * 60);
-                cookie.setPath("/");
-                response.addCookie(cookie);
-                suc = "Login successfully!!!";
+                session.setAttribute("account", acc);
+                switch (acc.getRoleAccount().getRole_id()) {
+                    case 1 ->
+                        response.sendRedirect("admin/dashboard");
+                    case 2 ->
+                        response.sendRedirect("student/objective");
+                    case 3 ->
+                        response.sendRedirect("lecturer/class-list");
+                    default -> {
+                        break;
+                    }
+                }
+                return;
             }
         }
 

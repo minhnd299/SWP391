@@ -34,7 +34,7 @@ public class UserManagement extends HttpServlet {
         if (a != null && a.getRoleAccount().getRole_id() == 1) {
             AccountDAO accountDAO = new AccountDAO();
             List<Account> listA = accountDAO.getAllUser();
-           
+
             request.setAttribute("account", listA);
             request.setAttribute("accounts", a);
             request.getRequestDispatcher("user-list.jsp").forward(request, response);
@@ -46,7 +46,26 @@ public class UserManagement extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("account");
+        AccountDAO accountDAO = new AccountDAO();
+        if (a != null && a.getRoleAccount().getRole_id() == 1) {
+            String action = request.getParameter("action");
+            if (action.equals("change-status")) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                String status = request.getParameter("status");
+                if (status.equalsIgnoreCase("active")) {
+                    accountDAO.changeStatus(id, "inactive");
+                    session.setAttribute("notification", "Block user successfully! ");
+                }else {
+                    session.setAttribute("notification", "un-block user successfully! ");
+                    accountDAO.changeStatus(id, "active");
+                }
+                response.sendRedirect("user-managament");
+            }
+        } else {
+            response.sendRedirect("../login");
+        }
     }
 
 }

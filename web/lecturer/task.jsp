@@ -73,6 +73,7 @@
                                     <th>Description</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
+                                    <th>Grade</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -87,6 +88,7 @@
                                         <td>${t.description}</td>
                                         <td>${t.start_date}</td>
                                         <td>${t.end_date}</td>
+                                        <td>${t.grade}</td>
                                         <td>
 
                                             <!-- Display status -->
@@ -173,7 +175,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-success btn-sm">Update</button>
+                                                    <button type="submit" class="btn btn-success btn-sm">Answer</button>
                                                 </div>
                                             </form>
                                         </div>

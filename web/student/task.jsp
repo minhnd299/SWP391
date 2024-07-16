@@ -59,6 +59,7 @@
                                     <th>Status</th>
                                     <th>End Date</th>
                                     <th>Status</th>
+                                    <th>Grade</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -70,6 +71,7 @@
                                         <td>${t.description}</td>
                                         <td>${t.start_date}</td>
                                         <td>${t.end_date}</td>
+                                        <td>${t.grade}</td>
                                         <td>
                                             <c:choose>
                                                 <c:when test="${t.status == 'in progress'}">

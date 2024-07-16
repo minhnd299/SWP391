@@ -22,7 +22,7 @@ import model.Task;
 
 @WebServlet(name = "TaskDetailController", urlPatterns = {"/lecturer/task-detail"})
 public class TaskDetailController extends HttpServlet {
-
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -31,7 +31,7 @@ public class TaskDetailController extends HttpServlet {
         TaskDAO taskDAO = new TaskDAO();
         CommentDAO commentDAO = new CommentDAO();
         int id = Integer.parseInt(request.getParameter("id"));
-        
+
         // Kiểm tra xem người dùng đã đăng nhập và có quyền là giảng viên hay không
         if (a != null && a.getRoleAccount().getRole_id() == 3) {
             Task task = taskDAO.getById(id);
@@ -39,23 +39,22 @@ public class TaskDetailController extends HttpServlet {
             request.setAttribute("task", task);
             request.setAttribute("comments", listComments);
             request.getRequestDispatcher("task-detail.jsp").forward(request, response);
-        } 
-        // Nếu người dùng chưa đăng nhập hoặc không có quyền, chuyển hướng tới trang đăng nhập
+        } // Nếu người dùng chưa đăng nhập hoặc không có quyền, chuyển hướng tới trang đăng nhập
         else {
             response.sendRedirect("../login");
         }
     }
-
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Account a = (Account) session.getAttribute("account");
-
+        
         LecturerDAO lecturerDAO = new LecturerDAO();
         CommentDAO commentDAO = new CommentDAO();
         String action = request.getParameter("action");
-
+        TaskDAO taskDAO = new TaskDAO();
         int tid = Integer.parseInt(request.getParameter("tid"));
         // Kiểm tra xem người dùng đã đăng nhập và có quyền là giảng viên hay không
         if (a != null && a.getRoleAccount().getRole_id() == 3) {
@@ -71,12 +70,11 @@ public class TaskDetailController extends HttpServlet {
                     session.setAttribute("notification", "Add comment success!");
                     // Chuyển hướng tới trang task detail
                     response.sendRedirect("task-detail?id=" + tid);
-                } 
-                catch (Exception e) {
+                } catch (Exception e) {
                     session.setAttribute("notificationErr", e.getMessage());
                     response.sendRedirect("task-detail?id=" + tid);
                 }
-
+                
             }
             // Nếu hành động là chỉnh sửa bình luận
             if (action.equals("edit-comment")) {
@@ -86,14 +84,29 @@ public class TaskDetailController extends HttpServlet {
                     commentDAO.updateComment(id, comment);
                     session.setAttribute("notification", "Edit comment success!");
                     response.sendRedirect("task-detail?id=" + tid);
-                } 
-                catch (Exception e) {
+                } catch (Exception e) {
                     session.setAttribute("notificationErr", e.getMessage());
                     response.sendRedirect("task-detail?id=" + tid);
                 }
             }
-        } 
-        // Nếu người dùng chưa đăng nhập hoặc không có quyền, chuyển hướng tới trang đăng nhập
+            if (action.equals("grade-task")) {
+                float grade = Float.parseFloat(request.getParameter("grade"));
+                
+                Task currentTask = taskDAO.getById(tid);
+                if (grade == currentTask.getGrade()) {
+                    response.sendRedirect("task-detail?id=" + tid);
+                    return;
+                }
+                try {
+                    taskDAO.gradeTask(tid, grade);
+                    session.setAttribute("notification", "Grade task success!");
+                    response.sendRedirect("task-detail?id=" + tid);
+                } catch (Exception e) {
+                    session.setAttribute("notificationErr", e.getMessage());
+                    response.sendRedirect("task-detail?id=" + tid);
+                }
+            }
+        } // Nếu người dùng chưa đăng nhập hoặc không có quyền, chuyển hướng tới trang đăng nhập
         else {
             response.sendRedirect("../login");
         }

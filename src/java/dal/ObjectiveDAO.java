@@ -52,22 +52,22 @@ public class ObjectiveDAO extends DBContext {
         return objectives;
     }
 
-//    public void changeObjectiveStatus(int objectiveId, String newStatus) {
-//        try {
-//            String query = "UPDATE Objective SET status = ? WHERE objective_id = ? ";
-//            PreparedStatement preparedStatement = connection.prepareStatement(query);
-//            preparedStatement.setString(1, newStatus);
-//            preparedStatement.setInt(2, objectiveId);
-//            int rowsAffected = preparedStatement.executeUpdate();
-//            if (rowsAffected > 0) {
-//                System.out.println("Objective status updated successfully.");
-//            } else {
-//                System.out.println("Failed to update objective status.");
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public void changeObjectiveStatus(int objectiveId, String newStatus) {
+        try {
+            String query = "UPDATE Objective SET status = ? WHERE objective_id = ? ";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, newStatus);
+            preparedStatement.setInt(2, objectiveId);
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Objective status updated successfully.");
+            } else {
+                System.out.println("Failed to update objective status.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Objective getById(int objectiveId) {
 
@@ -146,24 +146,6 @@ public class ObjectiveDAO extends DBContext {
             throw new Exception("Error occurred while deleting objective: " + e.getMessage(), e);
         }
     }
-
-    
-    //    public void changeObjectiveStatus(int objectiveId, String newStatus) {
-//        try {
-//            String query = "UPDATE Objective SET status = ? WHERE objective_id = ? ";
-//            PreparedStatement preparedStatement = connection.prepareStatement(query);
-//            preparedStatement.setString(1, newStatus);
-//            preparedStatement.setInt(2, objectiveId);
-//            int rowsAffected = preparedStatement.executeUpdate();
-//            if (rowsAffected > 0) {
-//                System.out.println("Objective status updated successfully.");
-//            } else {
-//                System.out.println("Failed to update objective status.");
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public static void main(String[] args) {
         ObjectiveDAO o = new ObjectiveDAO();

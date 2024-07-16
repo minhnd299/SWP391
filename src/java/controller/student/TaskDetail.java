@@ -51,14 +51,14 @@ public class TaskDetail extends HttpServlet {
         StudentDAO studentDAO = new StudentDAO();
         CommentDAO commentDAO = new CommentDAO();
         String action = request.getParameter("action");
-
+        TaskDAO taskDAO = new TaskDAO();
         int tid = Integer.parseInt(request.getParameter("tid"));
         if (a != null && a.getRoleAccount().getRole_id() == 2) {
             int lid = studentDAO.getByAccountId(a.getId()).getStudent_id();
             if (action.equals("add-comment")) {
                 String comment = request.getParameter("comment");
                 try {
-                    commentDAO.addLecturerComment(tid, lid, comment);
+                    commentDAO.addStudentComment(tid, tid, comment);
                     session.setAttribute("notification", "Add comment success!");
                     response.sendRedirect("task-detail?id=" + tid);
                 } catch (Exception e) {
@@ -80,21 +80,22 @@ public class TaskDetail extends HttpServlet {
                 }
 
             }
-            if (action.equals("close")) {
-                int id = Integer.parseInt(request.getParameter("tid"));
-                TaskDAO taskDAO = new TaskDAO();
-                String status = request.getParameter("status");
+            if (action.equals("update-link")) {
+                String link_code = request.getParameter("link_code");
 
+                Task currentTask = taskDAO.getById(tid);
+                if (link_code.equals(currentTask.getLink_code())) {
+                    response.sendRedirect("task-detail?id=" + tid);
+                    return;
+                }
                 try {
-                    taskDAO.changeTaskStatus(tid, status);
-                    session.setAttribute("notification", "Close task success!");
-                    session.setAttribute("notification", "Objective deleted!");
+                    taskDAO.updateLinkTask(tid, link_code);
+                    session.setAttribute("notification", "update driver link success!");
+                    response.sendRedirect("task-detail?id=" + tid);
                 } catch (Exception e) {
                     session.setAttribute("notificationErr", e.getMessage());
-                } finally {
-                    response.sendRedirect("task-detail?id=" + id);
+                    response.sendRedirect("task-detail?id=" + tid);
                 }
-
             }
 
         } else {

@@ -21,10 +21,10 @@ import javax.mail.internet.MimeMessage;
  */
 public class SendMail {
 
-    public boolean sendMailErrol(String email,String username, String content) {
+    public boolean sendMailErrol(String email, String username, String content) {
         boolean test = false;
         final String from = "minhndhe172328@fpt.edu.vn";
-        final String password = ""; 
+        final String password = "";
 
         // Properties : Declare all Attribute:
         Properties props = new Properties();
@@ -79,5 +79,41 @@ public class SendMail {
             e.printStackTrace();
         }
         return test;
+    }
+
+    private final String from = "minhndhe172328@fpt.edu.vn";
+    private final String password = "itswmrgodsiweygp";
+
+    private Session getSession() {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        Authenticator auth = new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(from, password);
+            }
+        };
+        return Session.getInstance(props, auth);
+    }
+
+    public boolean sendMail(String to, String subject, String content) {
+        boolean success = false;
+        try {
+            MimeMessage msg = new MimeMessage(getSession());
+            msg.setFrom(new InternetAddress(from));
+            msg.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            msg.setSubject(subject);
+            msg.setSentDate(new Date());
+            msg.setText(content);
+            Transport.send(msg);
+            success = true;
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return success;
     }
 }

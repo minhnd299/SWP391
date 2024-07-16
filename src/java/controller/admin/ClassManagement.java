@@ -1,6 +1,6 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+         * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+         * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 package controller.admin;
 
@@ -85,10 +85,15 @@ public class ClassManagement extends HttpServlet {
                     Sheet sheet = workbook.getSheetAt(0);
                     Row headerRow = sheet.getRow(0);
                     if (headerRow == null
-                            || !headerRow.getCell(0).getStringCellValue().equalsIgnoreCase("Email")
-                            || !headerRow.getCell(1).getStringCellValue().equalsIgnoreCase("FullName")
-                            || !headerRow.getCell(2).getStringCellValue().equalsIgnoreCase("RollNumber")) {
-
+                            || !headerRow.getCell(0).getStringCellValue().trim().equalsIgnoreCase("Roll Number")
+                            || !headerRow.getCell(1).getStringCellValue().trim().equalsIgnoreCase("Email")
+                            || !headerRow.getCell(2).getStringCellValue().trim().equalsIgnoreCase("Fullname")
+                            || !headerRow.getCell(3).getStringCellValue().trim().equalsIgnoreCase("Phone Number")
+                            || !headerRow.getCell(4).getStringCellValue().trim().equalsIgnoreCase("Major")
+                            || !headerRow.getCell(5).getStringCellValue().trim().equalsIgnoreCase("Company")
+                            || !headerRow.getCell(6).getStringCellValue().trim().equalsIgnoreCase("Job Title")
+                            || !headerRow.getCell(7).getStringCellValue().trim().equalsIgnoreCase("Link CV")) {
+                       
                         session.setAttribute("notificationErr", "File format is incorrect. Please download the templete!");
                         response.sendRedirect("class-list");
                         return;
@@ -101,10 +106,14 @@ public class ClassManagement extends HttpServlet {
                         if (row.getRowNum() == 0) {
                             continue; // skip header row
                         }
-                        String email = row.getCell(0).getStringCellValue();
-                        String fullName = row.getCell(1).getStringCellValue();
-                        String rollNumber = row.getCell(2).getStringCellValue();
-
+                        String rollNumber = row.getCell(0).getStringCellValue();
+                        String email = row.getCell(1).getStringCellValue();
+                        String fullName = row.getCell(2).getStringCellValue();
+                        String phoneNumber = row.getCell(3).getStringCellValue();
+                        String major = row.getCell(4).getStringCellValue();
+                        String company = row.getCell(5).getStringCellValue();
+                        String jobTitle = row.getCell(6).getStringCellValue();
+                        String linkCv = row.getCell(7).getStringCellValue();
                         // Add other fields as needed
                         Account account = accountDAO.getByEmail(email);
                         if (account == null) {
@@ -113,16 +122,22 @@ public class ClassManagement extends HttpServlet {
                             account.setEmail(email);
                             String username = email.split("@")[0];
                             account.setUsername(username);
+                            account.setPhone(major);
                             String password = PasswordUtils.generateRandomPassword();
                             account.setPassword(password);
+                            account.setPhone(phoneNumber);
                             account.setRoleAccount(r); // 
                             boolean isAdded = accountDAO.create(account);
                             if (isAdded) {
-
                                 Student student = new Student();
                                 student.setAccount(accountDAO.getLatestAccount());
                                 student.setFullName(fullName);
                                 student.setRollNumber(rollNumber);
+                                student.setMajor(major);
+                                student.setCompany(company);
+                                student.setJobTitle(jobTitle);
+                                student.setLinkCv(linkCv);
+                                
                                 boolean isAddStudent = studentDAO.create(student);
                                 if (isAddStudent) {
                                     sendMail.sendMailErrol(email, username, password);
@@ -155,7 +170,7 @@ public class ClassManagement extends HttpServlet {
                 String name = request.getParameter("name");
                 int lid = Integer.parseInt(request.getParameter("lid"));
                 Lecturer l = lecturerDAO.getById(lid);
-                model.Class newClass = new model.Class(0, name, l, "ACTIVE", 0);
+                model.Class newClass = new model.Class(0, name, l, "ACTIVE", 0,"");
 
                 boolean isAdded = classsDAO.addClass(newClass);
                 if (isAdded) {

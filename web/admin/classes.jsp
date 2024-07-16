@@ -4,13 +4,14 @@
 <jsp:include page="header.jsp"></jsp:include>
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
-                           <jsp:include page="header-content.jsp"></jsp:include>
+        <jsp:include page="header-content.jsp"></jsp:include>
 
             <div class="container-fluid">
                 <h1 class="h3 mb-2 text-gray-800">Class list</h1>
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <button  type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#add">Add class</button>
+                        <a href="../static/InternCandidate.xlsx" type="button" class="btn btn-success btn-sm">Download file template</a>
                     <c:if test="${not empty sessionScope.notification}">
                         <div class="alert alert-success alert-dismissible fade show" role="alert" style="text-align: center">
                             ${sessionScope.notification}
@@ -68,7 +69,7 @@
                                             </div>
                                             <form action="class-list" method="post" enctype="multipart/form-data">
                                                 <div class="modal-body">
-                                                    <input type="file" name="file" accept=".xls,.xlsx"/>
+                                                    <input required="" type="file" name="file" accept=".xls,.xlsx"/>
                                                     <input type="hidden" name="action" value="import"/>
                                                     <input type="hidden" name="cid" value="${c.class_id}"/>
                                                 </div>

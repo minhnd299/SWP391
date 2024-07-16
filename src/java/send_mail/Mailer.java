@@ -96,8 +96,6 @@ public class Mailer {
         while (password.length() < length) {
             char character = characters.charAt(random.nextInt(characters.length()));
             password.append(character);
-
-            // Check for character categories
             if (Character.isDigit(character)) {
                 hasDigit = true;
             } else if (Character.isLowerCase(character)) {
@@ -109,7 +107,6 @@ public class Mailer {
             }
         }
 
-        // Ensure all categories are present
         while (!(hasDigit && hasLowercase && hasUppercase && hasSpecial)) {
             int randomIndex = random.nextInt(password.length());
             char currentChar = password.charAt(randomIndex);
@@ -133,7 +130,6 @@ public class Mailer {
                 }
             }
         }
-
         return password.toString();
     }
 

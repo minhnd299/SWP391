@@ -65,9 +65,23 @@
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Users</span></a>
                 </li>
-
-                <!-- Divider -->
-                <hr class="sidebar-divider">
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/admin/new-list">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>News</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/admin/report">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Report</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/admin/support">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Support</span></a>
+                </li>
+               
+              
 
 
 

@@ -34,6 +34,10 @@ public class StudentDAO extends DBContext {
                 s.setRollNumber(rs.getString("rollNumber"));
                 s.setBirthDate(rs.getDate("birthDate"));
                 s.setSchoolYear(rs.getInt("schoolYear"));
+                s.setCompany(rs.getString("Company"));
+                s.setMajor(rs.getString("Major"));
+                s.setJobTitle(rs.getString("JobTitle"));
+                 s.setLinkCv(rs.getString("LinkCV"));
                 return s;
 
             }
@@ -59,6 +63,10 @@ public class StudentDAO extends DBContext {
                 s.setRollNumber(rs.getString("rollNumber"));
                 s.setBirthDate(rs.getDate("birthDate"));
                 s.setSchoolYear(rs.getInt("schoolYear"));
+                 s.setCompany(rs.getString("Company"));
+                s.setMajor(rs.getString("Major"));
+                s.setJobTitle(rs.getString("JobTitle"));
+                s.setLinkCv(rs.getString("LinkCV"));
                 return s;
 
             }
@@ -69,11 +77,15 @@ public class StudentDAO extends DBContext {
     }
 
     public boolean create(Student student) {
-        String insertStudentSQL = "INSERT INTO Student (account_id, fullName, rollNumber) VALUES (?, ?, ?)";
+        String insertStudentSQL = "INSERT INTO Student (account_id, fullName, rollNumber, company, major, jobtitle, LinkCV) VALUES (?, ?, ?,?,?,?,?)";
         try (PreparedStatement ps = connection.prepareStatement(insertStudentSQL)) {
             ps.setInt(1, student.getAccount().getId());
             ps.setString(2, student.getFullName());
             ps.setString(3, student.getRollNumber());
+            ps.setString(4, student.getCompany());
+            ps.setString(5, student.getMajor());
+            ps.setString(6, student.getJobTitle());
+            ps.setString(7, student.getLinkCv());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
@@ -108,6 +120,18 @@ public class StudentDAO extends DBContext {
         return null;
     }
 
+     public boolean updateStudent(int sId, String fullName) {
+        String query = "UPDATE Student SET fullName = ?  WHERE student_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, fullName);
+            ps.setInt(2, sId);
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     public static void main(String[] args) {
         StudentDAO l = new StudentDAO();
         System.out.println(l.getLastestStudent( ));
